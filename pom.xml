@@ -1,0 +1,263 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.mandfer</groupId>
+    <artifactId>sunfunpi4j</artifactId>
+    <version>1.0.0.01-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>sunfunpi4j</name>
+    <url>http://maven.apache.org</url>
+    
+    <!-- //TODO: Add plugin deploy from pi4j main pom -->
+
+    <!-- BUILD PROPERTIES -->
+    <properties>
+        <!-- DEFAULT RASPBERRY PI PROPERTIES -->
+        <pi.host>192.168.0.11</pi.host>
+        <pi.port>22</pi.port>
+        <pi.user>pi</pi.user>
+        <pi.password>streametry</pi.password>        
+        
+        <!-- SETTINGS FOR REMOTELY BUILDING NATIVE LIBRARY ON RASPBERRY PI -->
+        <pi.dirBuildTemp>/home/pi/pi4j-temp</pi.dirBuildTemp>
+
+        <!-- SETTINGS FOR COPYING Pi4J ARTIFACTS TO DEVELOPMENT RASPBERRY PI -->
+        <pi.transfer.dev>false</pi.transfer.dev>
+        <pi.host.dev>${pi.host}</pi.host.dev>
+        <pi.port.dev>${pi.port}</pi.port.dev>
+        <pi.user.dev>${pi.user}</pi.user.dev>
+        <pi.password.dev>${pi.password}</pi.password.dev>
+        <pi.dirCopyTo.dev>/home/pi/sunfounder-raspi-4j/target</pi.dirCopyTo.dev>
+        
+        <!-- DEPENDENCY VERSIONS -->
+        <ant-jsch.version>1.7.1</ant-jsch.version>
+        <jsch.version>0.1.51</jsch.version>
+        <ant-contrib.version>20020829</ant-contrib.version>
+
+        <!-- PROJECT ENCODING PROPERTIES -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        
+        <!-- JAVA COMPILER VERSIONS -->
+        <jdk.source.version>1.7</jdk.source.version>
+        <jdk.target.version>1.7</jdk.target.version>
+        
+        <!-- PLUGIN VERSIONS -->
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>2.3</maven-source-plugin.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>oss-snapshots-repo</id>
+            <name>Sonatype OSS Maven Repository</name>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+
+        <!-- Pi4j -->
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Logging tools -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
+        <!-- Used by Slf4j as a transitive dependency -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <!-- Unit test tools -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
+        
+        <!-- Power mock for static and final unit testing -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.5.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.6.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-reflect</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+
+
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>SlowTests</id>
+            <properties>
+                <testcase.groups>org.mandfer.categories.SlowTest</testcase.groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>FastTests</id>
+            <properties>
+                <testcase.groups>org.mandfer.categories.FastTest</testcase.groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>AllTests</id>
+            <properties>
+                <testcase.groups>org.mandfer.categories.FastTest, org.mandfer.categories.SlowTest</testcase.groups>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            
+            <!-- Surefire tests -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18</version>
+                <configuration>
+                    <groups>${testcase.groups}</groups>
+                </configuration>
+            </plugin>
+            
+            <!-- Add all libraries to the JAR file. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <executions>
+                    <execution>
+                        <id>jar-with-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptor>src/main/resources/assembly.xml</descriptor>
+                            <appendAssemblyId>true</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- JAVA COMPILER -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${jdk.source.version}</source>
+                    <target>${jdk.target.version}</target>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+            
+            <!-- OPTIONALLY DEPLOY THE FINAL JAR TO THE RASPBERRY PI -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+
+                    <!-- copy the compiled JAR file to the Raspberry Pi platform platform -->
+                    <execution>
+                        <id>transfer-compiled-pi4j-example-jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <if>
+                                    <equals arg1="${pi.transfer.dev}" arg2="true" />
+                                    <then>
+
+                                        <!-- ensure the target directory exists on the Raspberry Pi -->
+                                        <sshexec host="${pi.host.dev}" port="${pi.port.dev}" username="${pi.user.dev}"
+                                                 password="${pi.password.dev}" trust="true" failonerror="false"
+                                                 verbose="true" command="mkdir --parents ${pi.dirCopyTo.dev}" />
+
+                                        <!-- copy the JAR file to the Raspberry Pi -->
+                                        <scp
+                                            file="${project.build.directory}/${project.build.finalName}-all.jar"
+                                            todir="${pi.user.dev}:${pi.password.dev}@${pi.host.dev}:${pi.dirCopyTo.dev}"
+                                            port="${pi.port.dev}" trust="true" verbose="true" failonerror="true">
+                                        </scp>
+                                    </then>
+                                </if>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-jsch</artifactId>
+                        <version>${ant-jsch.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcraft</groupId>
+                        <artifactId>jsch</artifactId>
+                        <version>${jsch.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>${ant-contrib.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>        
+        </plugins>
+    </build>
+
+</project>
