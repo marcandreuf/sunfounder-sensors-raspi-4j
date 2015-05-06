@@ -112,18 +112,6 @@ public abstract class BaseSketch {
         }
     }
     
-    protected List<GpioPinDigitalOutput> createListOfPinOutputs(int numOfPins) throws Exception {
-        Pin pin;
-        List<GpioPinDigitalOutput> list = new ArrayList<>();
-        if(numOfPins<1) throw new NumberFormatException("The num of leds can not be negative.");
-        if(numOfPins>20) throw new NumberFormatException("The maximum number of GPIOs is 20.");
-        for (int i = 0; i < numOfPins; i++) {
-            pin = RaspiPin.getPinByName("GPIO "+i);
-            list.add(gpio.provisionDigitalOutputPin(pin));
-            logger.debug("linker LedPin : GPIO "+pin.getAddress()+"(wiringPi pin)");            
-        }
-        return list;
-    }    
     
     protected static void wiringPiSetup(){
         if (Gpio.wiringPiSetup() == -1) {

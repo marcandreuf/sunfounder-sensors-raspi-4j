@@ -23,8 +23,9 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 /**
@@ -34,7 +35,9 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class Ex01_SwitchHall extends BaseSketch {    
 
-    private GpioPinDigitalOutput led;
+    private GpioPinDigitalInput hallPin;
+    private GpioPinDigitalOutput ledPin;
+    
     
     public Ex01_SwitchHall(GpioController gpio){
         super(gpio);
@@ -47,15 +50,24 @@ public class Ex01_SwitchHall extends BaseSketch {
     
     @Override
     protected void setup() {
-        Pin pinNumber = RaspiPin.GPIO_00;
-        led = gpio.provisionDigitalOutputPin(pinNumber);
-        logger.debug("linker LedPin : "+pinNumber+"(wiringPi pin)");
+        hallPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Hall switch ready!");
     }
 
     @Override
     protected void loop(String[] args) {
-        do{
-            
+        do{            
+            ledPin.setState(PinState.LOW);
+            if(hallPin.isLow()){
+                delay(10);
+                if(hallPin.isLow()){
+                    while(hallPin.isLow()){}
+                    ledPin.setState(PinState.HIGH);
+                    logger.info("Detected magnetic materials !");
+                    delay(500);
+                }
+            }
         }while(isNotInterrupted);
     }
 
