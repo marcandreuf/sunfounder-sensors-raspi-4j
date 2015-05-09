@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * Super class with sketch abstraction methods.
@@ -84,9 +86,17 @@ public abstract class BaseSketch {
 
     protected void delay(long miliseconds) {
         try {
-            Thread.sleep(miliseconds);
+            TimeUnit.MILLISECONDS.sleep(miliseconds);
         } catch (InterruptedException ex) {
-            logger.error("Sleep delay interrupted " + ex.getMessage());
+            logger.error("Sleep Milliseconds delay interrupted " + ex.getMessage());
+        }
+    }
+    
+    protected void delayMicrosendos(long microseconds){
+        try {
+            TimeUnit.MICROSECONDS.sleep(microseconds);
+        } catch (InterruptedException ex) {
+            logger.error("Sleep Microseconds delay interrupted " + ex.getMessage());
         }
     }
 
