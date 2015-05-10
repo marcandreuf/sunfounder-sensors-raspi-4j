@@ -47,7 +47,15 @@ public class Ex02_LinearHall extends BaseSketch {
      * type in JAVA. The next numeric type is 'short', 
      * which is a 16-bit integer.  
      * 
-     * @param gpio 
+     * Documentation about the Hall effect and the ADC0832CCN 
+     * 
+     * Hall effect sensing and application by Honeywell 
+     * http://sensing.honeywell.com/index.php?ci_id=47847 
+     * 
+     * Hall effect sensor 44E datasheet 
+     * http://www.allegromicro.com/~/media/Files/Datasheets/A3141-2-3-4-Datasheet.ashx
+     * 
+     * @param gpio controller 
      */
     public Ex02_LinearHall(GpioController gpio){
         super(gpio);
@@ -74,11 +82,9 @@ public class Ex02_LinearHall extends BaseSketch {
 
     @Override
     protected void loop(String[] args) {
-        short analogVal;        
-        
+        short analogVal;
         do{            
-            ADC_DIO.setMode(PinMode.DIGITAL_OUTPUT);
-            
+            ADC_DIO.setMode(PinMode.DIGITAL_OUTPUT);            
             analogVal = get_ADC_Result();
             intensity = (short) (210 - analogVal);
             logger.debug("Current intensity of magnetic field: "+Integer.valueOf(intensity));
@@ -89,37 +95,47 @@ public class Ex02_LinearHall extends BaseSketch {
     private short get_ADC_Result(){        
         short dat1=0, dat2=0;
         
+        // Start converstaion        
         ADC_CS.low();
+	
+	// MUX Start bit to setup MUX address (Multiplexer configuration)
         ADC_CLK.low();
-        ADC_DIO.high(); delayMicrosendos(2);
-        ADC_CLK.high(); delayMicrosendos(2);        
-        
-        ADC_CLK.low();
+        ADC_DIO.high(); delayMicrosendos(2);  // Start bit
+        ADC_CLK.high(); delayMicrosendos(2);         
+
+	// MUX SGL/-DIF git to setup Sigle-Ended channel type
+	ADC_CLK.low();
         ADC_DIO.high(); delayMicrosendos(2);
         ADC_CLK.high(); delayMicrosendos(2);
         
+        // MUX ODD/SIGN bit to setup analog input in Channel #0
         ADC_CLK.low();
-        ADC_DIO.high(); delayMicrosendos(2);
-        ADC_CLK.high();
-        ADC_DIO.high(); delayMicrosendos(2);
-        ADC_CLK.low();
-        ADC_DIO.high(); delayMicrosendos(2);
+        ADC_DIO.low(); delayMicrosendos(2); 
+        ADC_CLK.high();        
         
-        ADC_DIO.setMode(PinMode.DIGITAL_INPUT);
+        // Keep the clock going to settle the MUX address
+        delayMicrosendos(2);
+        ADC_CLK.low();
+        delayMicrosendos(2);
+
+	// Read MSB byte
+	ADC_DIO.setMode(PinMode.DIGITAL_INPUT);        
         for(byte i=0; i<8; i++){
             ADC_CLK.high(); delayMicrosendos(2);
             ADC_CLK.low(); delayMicrosendos(2);
             dat1 = (short) ((dat1 << 1) | ADC_DIO.getState().getValue());
         }
-        
+        // Read LSB byte
         for(byte i=0; i<8; i++){
             dat2 = (short) (dat2 | (ADC_DIO.getState().getValue() << i));
             ADC_CLK.high(); delayMicrosendos(2);
             ADC_CLK.low(); delayMicrosendos(2);
         }
         
+        // End of conversation.
         ADC_CS.high();
         
+        //If valid reading MSF == LSF
         return dat1==dat2 ? dat1 : 0;        
     }
 

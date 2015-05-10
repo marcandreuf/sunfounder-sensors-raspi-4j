@@ -27,9 +27,11 @@ import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
+import com.sun.corba.se.impl.interceptors.SlotTableStack;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -92,9 +94,10 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
         
         verify(mocked_ADC_DIO).setMode(PinMode.DIGITAL_OUTPUT);
         verify(mocked_ADC_CS).low();
-        verify(mocked_ADC_DIO, times(5)).high();
-        verify(mocked_ADC_CLK, times(19)).high();
         verify(mocked_ADC_CLK, times(20)).low();
+        verify(mocked_ADC_CLK, times(19)).high();
+        verify(mocked_ADC_DIO, times(2)).high();
+        verify(mocked_ADC_DIO).low();
         verify(mocked_ADC_DIO).setMode(PinMode.DIGITAL_INPUT);
         verify(mocked_ADC_CS).high();
     }
