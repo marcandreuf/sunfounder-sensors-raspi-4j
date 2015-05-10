@@ -35,14 +35,17 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class Ex02_LinearHall extends BaseSketch {    
 
+    private short intensity;
+    
     private GpioPinDigitalOutput ADC_CS;
     private GpioPinDigitalOutput ADC_CLK;
     private GpioPinDigitalMultipurpose ADC_DIO;
     
     /**
-     * In this example we use type 'char'. In JAVA the type 'byte' is 
+     * In this example we use type 'short'. In JAVA the type 'byte' is 
      * signed and the values go from -128 to 127. There is no unsigned 'byte'
-     * type in JAVA. The next type char, which is a single 16-bit positive integer.  
+     * type in JAVA. The next numeric type is 'short', 
+     * which is a 16-bit integer.  
      * 
      * @param gpio 
      */
@@ -54,6 +57,10 @@ public class Ex02_LinearHall extends BaseSketch {
         Ex02_LinearHall sketch = new Ex02_LinearHall( GpioFactory.getInstance());
         sketch.run(args);
     }    
+    
+    public short getIntensity(){
+        return intensity;
+    }
     
     @Override
     protected void setup() {
@@ -67,21 +74,20 @@ public class Ex02_LinearHall extends BaseSketch {
 
     @Override
     protected void loop(String[] args) {
-        char analogVal;
-        char mag;
+        short analogVal;        
         
         do{            
             ADC_DIO.setMode(PinMode.DIGITAL_OUTPUT);
             
             analogVal = get_ADC_Result();
-            mag = (char) (210 - analogVal);
-            logger.debug("Current intensity of magnetic field: "+Integer.valueOf(mag));
+            intensity = (short) (210 - analogVal);
+            logger.debug("Current intensity of magnetic field: "+Integer.valueOf(intensity));
             delay(500);            
         }while(isNotInterrupted);
     }
     
-    private char get_ADC_Result(){        
-        char dat1=0, dat2=0;
+    private short get_ADC_Result(){        
+        short dat1=0, dat2=0;
         
         ADC_CS.low();
         ADC_CLK.low();
@@ -103,11 +109,11 @@ public class Ex02_LinearHall extends BaseSketch {
         for(byte i=0; i<8; i++){
             ADC_CLK.high(); delayMicrosendos(2);
             ADC_CLK.low(); delayMicrosendos(2);
-            dat1 = (char) ((dat1 << 1) | ADC_DIO.getState().getValue());
+            dat1 = (short) ((dat1 << 1) | ADC_DIO.getState().getValue());
         }
         
         for(byte i=0; i<8; i++){
-            dat2 = (char) (dat2 | (ADC_DIO.getState().getValue() << i));
+            dat2 = (short) (dat2 | (ADC_DIO.getState().getValue() << i));
             ADC_CLK.high(); delayMicrosendos(2);
             ADC_CLK.low(); delayMicrosendos(2);
         }

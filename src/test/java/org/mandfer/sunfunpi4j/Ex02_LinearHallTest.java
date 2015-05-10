@@ -28,6 +28,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
 import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -108,20 +109,35 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
     }
     
     
-//    @Test
-//    public void testMagneticFieldInteraction() throws InterruptedException {
-//        prepareMockedPins();
-//                
-//        when(mocked_hallPin.isLow()).thenReturn(true, true, false);
-//        
-//        sketch.setup();
-//        sketch.setSketchInterruption();
-//        sketch.loop();
-//        
-//        verify(mocked_ledPin).setState(PinState.LOW);
-//        verify(mocked_hallPin, times(3)).isLow();
-//        verify(mocked_ledPin).setState(PinState.HIGH);
-//        verifyNoMoreInteractions(mocked_hallPin, mocked_ledPin);
-//    }   
+    @Test
+    public void testMagneticFieldInteraction() throws InterruptedException {
+        prepareMockedPins();
+        when(mocked_ADC_DIO.getState())
+          .thenReturn(// Byte dat 1
+                      PinState.HIGH, //128 
+                      PinState.LOW, //64
+                      PinState.LOW, //32
+                      PinState.LOW, //16
+                      PinState.LOW, //8
+                      PinState.LOW, //4
+                      PinState.LOW, //2
+                      PinState.LOW, //1
+                      // Byte dat 2
+                      PinState.LOW, //128 
+                      PinState.LOW, //64
+                      PinState.LOW, //32
+                      PinState.LOW, //16
+                      PinState.LOW, //8
+                      PinState.LOW, //4
+                      PinState.LOW, //2
+                      PinState.HIGH //1
+                      );        
+                
+        sketch.setup();
+        sketch.setSketchInterruption();
+        sketch.loop();
+       
+        assertTrue(sketch.getIntensity() == 82);
+    }   
 
 }
