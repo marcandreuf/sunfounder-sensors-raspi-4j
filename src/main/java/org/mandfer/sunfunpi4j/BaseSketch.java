@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * Super class with sketch abstraction methods.
@@ -41,7 +43,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public abstract class BaseSketch {
 
-    protected static final Logger logger = LoggerFactory.getLogger(BaseSketch.class.getName());
+    protected static final Logger logger = LoggerFactory.getLogger("Sketch");
     protected final GpioController gpio;
     protected static Thread threadCheckInputStream;
     protected boolean isNotInterrupted = true;
@@ -84,9 +86,17 @@ public abstract class BaseSketch {
 
     protected void delay(long miliseconds) {
         try {
-            Thread.sleep(miliseconds);
+            TimeUnit.MILLISECONDS.sleep(miliseconds);
         } catch (InterruptedException ex) {
-            logger.error("Sleep delay interrupted " + ex.getMessage());
+            logger.error("Sleep Milliseconds delay interrupted " + ex.getMessage());
+        }
+    }
+    
+    protected void delayMicrosendos(long microseconds){
+        try {
+            TimeUnit.MICROSECONDS.sleep(microseconds);
+        } catch (InterruptedException ex) {
+            logger.error("Sleep Microseconds delay interrupted " + ex.getMessage());
         }
     }
 
@@ -112,18 +122,6 @@ public abstract class BaseSketch {
         }
     }
     
-    protected List<GpioPinDigitalOutput> createListOfPinOutputs(int numOfPins) throws Exception {
-        Pin pin;
-        List<GpioPinDigitalOutput> list = new ArrayList<>();
-        if(numOfPins<1) throw new NumberFormatException("The num of leds can not be negative.");
-        if(numOfPins>20) throw new NumberFormatException("The maximum number of GPIOs is 20.");
-        for (int i = 0; i < numOfPins; i++) {
-            pin = RaspiPin.getPinByName("GPIO "+i);
-            list.add(gpio.provisionDigitalOutputPin(pin));
-            logger.debug("linker LedPin : GPIO "+pin.getAddress()+"(wiringPi pin)");            
-        }
-        return list;
-    }    
     
     protected static void wiringPiSetup(){
         if (Gpio.wiringPiSetup() == -1) {

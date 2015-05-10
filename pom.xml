@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.mandfer</groupId>
-    <artifactId>sunfunpi4j</artifactId>
+    <artifactId>sunfun-sensors-pi4j</artifactId>
     <version>1.0.0.01-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>sunfunpi4j</name>
+    <name>sunfunSensorsPi4j</name>
     <url>http://maven.apache.org</url>
     
     <!-- //TODO: Add plugin deploy from pi4j main pom -->
@@ -29,7 +29,7 @@
         <pi.port.dev>${pi.port}</pi.port.dev>
         <pi.user.dev>${pi.user}</pi.user.dev>
         <pi.password.dev>${pi.password}</pi.password.dev>
-        <pi.dirCopyTo.dev>/home/pi/sunfounder-raspi-4j/target</pi.dirCopyTo.dev>
+        <pi.dirCopyTo.dev>/home/pi/sunfounder-sensors-raspi-4j/</pi.dirCopyTo.dev>
         
         <!-- DEPENDENCY VERSIONS -->
         <ant-jsch.version>1.7.1</ant-jsch.version>
