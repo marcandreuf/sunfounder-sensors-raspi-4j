@@ -52,12 +52,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @Category(FastTest.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Gpio.class, TimeUnit.class})
-public class Ex02_LinearHallTest extends BaseSketchTest{
+public class Ex02_03_LinearHallTest extends BaseSketchTest{
     
     private GpioPinDigitalOutput mocked_ADC_CS;
     private GpioPinDigitalOutput mocked_ADC_CLK;
     private GpioPinDigitalMultipurpose mocked_ADC_DIO;    
-    private Ex02_LinearHall sketch;
+    private Ex02_03_LinearHall sketch;
     
     @Before
     public void setUp(){
@@ -67,7 +67,7 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
         mocked_ADC_CS = mock(GpioPinDigitalOutput.class);
         mocked_ADC_CLK = mock(GpioPinDigitalOutput.class);
         mocked_ADC_DIO = mock(GpioPinDigitalMultipurpose.class);
-        sketch = new Ex02_LinearHall(mocked_gpioController);
+        sketch = new Ex02_03_LinearHall(mocked_gpioController);
     }
     
     @Test

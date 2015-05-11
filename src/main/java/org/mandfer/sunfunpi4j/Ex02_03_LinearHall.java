@@ -33,7 +33,7 @@ import com.pi4j.io.gpio.RaspiPin;
  *
  * @author marcandreuf
  */
-public class Ex02_LinearHall extends BaseSketch {    
+public class Ex02_03_LinearHall extends BaseSketch {    
 
     private short intensity;
     
@@ -55,14 +55,17 @@ public class Ex02_LinearHall extends BaseSketch {
      * Hall effect sensor 44E datasheet 
      * http://www.allegromicro.com/~/media/Files/Datasheets/A3141-2-3-4-Datasheet.ashx
      * 
+     * ADC0832 datasheet
+     * http://pdf1.alldatasheet.com/datasheet-pdf/view/158145/NSC/ADC0832CCN.html
+     * 
      * @param gpio controller 
      */
-    public Ex02_LinearHall(GpioController gpio){
+    public Ex02_03_LinearHall(GpioController gpio){
         super(gpio);
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex02_LinearHall sketch = new Ex02_LinearHall( GpioFactory.getInstance());
+        Ex02_03_LinearHall sketch = new Ex02_03_LinearHall( GpioFactory.getInstance());
         sketch.run(args);
     }    
     
