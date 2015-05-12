@@ -7,9 +7,6 @@
 package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
 import java.awt.Color;
 
@@ -25,24 +22,33 @@ public abstract class RGB_Base extends BaseSketch {
     }
 
     public static final int LEDPINRED = 0;
+    public static final int LEDPINYELLOW = 1;
     public static final int LEDPINGREEN = 1;
     public static final int LEDPINBLUE = 2;
     
     
-    protected void ledInit() {
-        SoftPwm.softPwmCreate(LEDPINRED, 0, 100);
-        SoftPwm.softPwmCreate(LEDPINGREEN, 0, 100);
-        SoftPwm.softPwmCreate(LEDPINBLUE, 0, 100);
+    protected void ledInit(int ledPinA, int ledPinB) {
+        SoftPwm.softPwmCreate(ledPinA, 0, 100);
+        SoftPwm.softPwmCreate(ledPinB, 0, 100);        
+    }
+    
+    protected void ledInit(int ledPinA, int ledPinB, int ledPinC) {
+        ledInit(ledPinA, ledPinB);
+        SoftPwm.softPwmCreate(ledPinC, 0, 100);
     } 
     
     protected void ledColorSet(Color color) {
         ledColorSet(color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    protected void ledColorSet(int... colorValue) {
-        SoftPwm.softPwmWrite(LEDPINRED, colorValue[0]);
-        SoftPwm.softPwmWrite(LEDPINGREEN, colorValue[1]);
-        SoftPwm.softPwmWrite(LEDPINBLUE, colorValue[2]);
+    protected void ledColorSet(int colorA, int colorB) {
+        SoftPwm.softPwmWrite(LEDPINRED, colorA);
+        SoftPwm.softPwmWrite(LEDPINGREEN, colorB);
+    }
+    
+    protected void ledColorSet(int colorA, int colorB, int colorC) {
+        ledColorSet(colorA, colorB);
+        SoftPwm.softPwmWrite(LEDPINBLUE, colorC);
     }
     
     protected void turnLedOff(){

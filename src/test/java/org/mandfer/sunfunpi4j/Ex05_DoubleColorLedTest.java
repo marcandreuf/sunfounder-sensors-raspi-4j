@@ -21,28 +21,48 @@
 
 package org.mandfer.sunfunpi4j;
 
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.SoftPwm;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mandfer.categories.FastTest;
+import static org.mandfer.sunfunpi4j.RGB_Base.LEDPINRED;
+import static org.mandfer.sunfunpi4j.RGB_Base.LEDPINYELLOW;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  *
  * @author marcandreuf
  */
-@Category(FastTest.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Gpio.class, SoftPwm.class})
 public class Ex05_DoubleColorLedTest extends BaseSketchTest{
  
     private Ex05_DoubleColorLed sketch;
     
     @Before
     public void setUp(){
+        PowerMockito.mockStatic(Gpio.class);
+        PowerMockito.mockStatic(SoftPwm.class);
         sketch = new Ex05_DoubleColorLed(mocked_gpioController);
     }
     
     @Test
+    @Category(FastTest.class)
     public void verifySetup(){
-        //sketch.setup();
-    }    
+        sketch.setup();
+        
+        PowerMockito.verifyStatic();
+        Gpio.wiringPiSetup();
+        
+        PowerMockito.verifyStatic();
+        SoftPwm.softPwmCreate(LEDPINRED, 0, 100);
+        PowerMockito.verifyStatic();
+        SoftPwm.softPwmCreate(LEDPINYELLOW, 0, 100);
+    }  
 
 }

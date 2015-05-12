@@ -23,7 +23,6 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.SoftPwm;
-import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -33,10 +32,7 @@ import org.mandfer.categories.SlowTest;
 import static org.mandfer.sunfunpi4j.RGB_Base.LEDPINBLUE;
 import static org.mandfer.sunfunpi4j.RGB_Base.LEDPINGREEN;
 import static org.mandfer.sunfunpi4j.RGB_Base.LEDPINRED;
-import org.mockito.Matchers;
 import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.times;
-import org.mockito.internal.verification.AtLeast;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -54,8 +50,7 @@ public class Ex04_RGBTest extends BaseSketchTest{
     @Before
     public void setUp(){
         PowerMockito.mockStatic(Gpio.class);
-        PowerMockito.mockStatic(SoftPwm.class);
-        
+        PowerMockito.mockStatic(SoftPwm.class);        
         sketch = new Ex04_RGB(mocked_gpioController);
     }
     
@@ -88,9 +83,6 @@ public class Ex04_RGBTest extends BaseSketchTest{
         SoftPwm.softPwmWrite(LEDPINGREEN, 0);
         PowerMockito.verifyStatic(atLeast(1));
         SoftPwm.softPwmWrite(LEDPINBLUE, 0);
-        
-        PowerMockito.verifyStatic(times(0));
-        SoftPwm.softPwmCreate(Matchers.anyInt(), Matchers.anyInt(), Matchers.anyInt());
     }
 
 }

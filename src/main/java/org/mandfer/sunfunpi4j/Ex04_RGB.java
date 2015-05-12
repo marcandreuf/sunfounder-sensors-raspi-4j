@@ -23,10 +23,6 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.wiringpi.SoftPwm;
 import java.awt.Color;
 
 /**
@@ -51,7 +47,7 @@ public class Ex04_RGB extends RGB_Base {
     @Override
     protected void setup() {
         wiringPiSetup();
-        ledInit();
+        ledInit(LEDPINRED, LEDPINGREEN, LEDPINBLUE);
         logger.debug("Rgb ready!");        
     }
 
