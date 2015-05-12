@@ -65,7 +65,7 @@ public class Ex02_03_LinearHall extends BaseSketch {
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex02_03_LinearHall sketch = new Ex02_03_LinearHall( GpioFactory.getInstance());
+        Ex02_03_LinearHall sketch = new Ex02_03_LinearHall(GpioFactory.getInstance());
         sketch.run(args);
     }    
     

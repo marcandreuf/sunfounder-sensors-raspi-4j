@@ -27,15 +27,14 @@ import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
-import com.sun.corba.se.impl.interceptors.SlotTableStack;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mandfer.categories.FastTest;
+import org.mandfer.categories.SlowTest;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,9 +46,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  *
- * @author marc
+ * @author marcandreuf
  */
-@Category(FastTest.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Gpio.class, TimeUnit.class})
 public class Ex02_03_LinearHallTest extends BaseSketchTest{
@@ -60,6 +58,7 @@ public class Ex02_03_LinearHallTest extends BaseSketchTest{
     private Ex02_03_LinearHall sketch;
     
     @Before
+    @Category(FastTest.class)
     public void setUp(){
         PowerMockito.mockStatic(Gpio.class);
         PowerMockito.mockStatic(TimeUnit.class);
@@ -71,6 +70,7 @@ public class Ex02_03_LinearHallTest extends BaseSketchTest{
     }
     
     @Test
+    @Category(SlowTest.class)
     public void verifySetup(){
         sketch.setup();
         
@@ -84,6 +84,7 @@ public class Ex02_03_LinearHallTest extends BaseSketchTest{
     }
     
     @Test
+    @Category(SlowTest.class)
     public void testNotMagneticFieldInteraction() throws InterruptedException {
         prepareMockedPins();
         when(mocked_ADC_DIO.getState()).thenReturn(PinState.LOW);        
@@ -113,6 +114,7 @@ public class Ex02_03_LinearHallTest extends BaseSketchTest{
     
     
     @Test
+    @Category(SlowTest.class)
     public void testMagneticFieldInteraction() throws InterruptedException {
         prepareMockedPins();
         when(mocked_ADC_DIO.getState())

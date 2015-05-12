@@ -29,19 +29,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mandfer.categories.FastTest;
-import org.mockito.Mockito;
+import org.mandfer.categories.SlowTest;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import org.powermock.api.mockito.internal.verification.VerifyNoMoreInteractions;
 
 /**
  *
- * @author marc
+ * @author marcandreuf
  */
-@Category(FastTest.class)
 public class Ex01_SwitchHallTest extends BaseSketchTest{
     
     private GpioPinDigitalInput mocked_hallPin;
@@ -56,6 +54,7 @@ public class Ex01_SwitchHallTest extends BaseSketchTest{
     }
     
     @Test
+    @Category(FastTest.class)
     public void verifySetup(){
         sketch.setup();
         
@@ -65,6 +64,7 @@ public class Ex01_SwitchHallTest extends BaseSketchTest{
     }
     
     @Test
+    @Category(SlowTest.class)
     public void testNotMagneticFieldInteraction() throws InterruptedException {
         prepareMockedPins();                
         when(mocked_hallPin.isLow()).thenReturn(false);
@@ -84,6 +84,7 @@ public class Ex01_SwitchHallTest extends BaseSketchTest{
     
     
     @Test
+    @Category(SlowTest.class)
     public void testMagneticFieldInteraction() throws InterruptedException {
         prepareMockedPins();
                 

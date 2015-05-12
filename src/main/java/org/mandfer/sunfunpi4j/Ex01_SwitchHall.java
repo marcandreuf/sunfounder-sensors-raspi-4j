@@ -44,7 +44,7 @@ public class Ex01_SwitchHall extends BaseSketch {
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex01_SwitchHall sketch = new Ex01_SwitchHall( GpioFactory.getInstance());
+        Ex01_SwitchHall sketch = new Ex01_SwitchHall(GpioFactory.getInstance());
         sketch.run(args);
     }    
     
