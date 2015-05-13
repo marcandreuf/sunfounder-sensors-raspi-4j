@@ -25,11 +25,10 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
-public class Ex11_02_AnalogTempSensor extends BaseSketch {    
+public class Ex11_02_AnalogTempSensor extends ADC_Base {    
    
     /**
      * @param gpio controller 
@@ -45,12 +44,17 @@ public class Ex11_02_AnalogTempSensor extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        super.setup();
+        logger.debug("Analog temp sensor ready!");
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        short temp;
+        do{
+          temp = (short) (140 - get_ADC_Result());
+            logger.debug("Current temperature: "+temp);
+            delay(500);  
         }while(isNotInterrupted);
     }
 }

@@ -21,28 +21,73 @@
 
 package org.mandfer.sunfunpi4j;
 
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.wiringpi.Gpio;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mandfer.categories.FastTest;
+import org.mandfer.categories.SlowTest;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  *
  * @author marcandreuf
  */
-@Category(FastTest.class)
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Gpio.class)
 public class Ex06_ShockSwitchTest extends BaseSketchTest{
  
+    private GpioPinDigitalInput mocked_shockPin;
+    private GpioPinDigitalOutput mocked_ledPin;
     private Ex06_ShockSwitch sketch;
     
     @Before
     public void setUp(){
+        PowerMockito.mockStatic(Gpio.class);
+        
+        mocked_shockPin = mock(GpioPinDigitalInput.class);
+        mocked_ledPin = mock(GpioPinDigitalOutput.class);
         sketch = new Ex06_ShockSwitch(mocked_gpioController);
     }
     
     @Test
+    @Category(FastTest.class)
     public void verifySetup(){
-        //sketch.setup();
+        sketch.setup();
+        
+        PowerMockito.verifyStatic();
+        Gpio.wiringPiSetup();
+        
+        verify(mocked_gpioController).provisionDigitalInputPin(RaspiPin.GPIO_00);
+        verify(mocked_gpioController).provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        verifyNoMoreInteractions(mocked_gpioController);
     }    
+    
+    @Test
+    @Category(SlowTest.class)
+    public void testReadingShockSensor() throws InterruptedException{        
+        when(mocked_gpioController.provisionDigitalInputPin(RaspiPin.GPIO_00)).thenReturn(mocked_shockPin);
+        when(mocked_gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_01)).thenReturn(mocked_ledPin);
+        when(mocked_shockPin.isLow()).thenReturn(Boolean.TRUE);
+        
+        sketch.setup();
+        sketch.setSketchInterruption();
+        sketch.loop();
+        
+        verify(mocked_shockPin, times(2)).isLow();
+        verify(mocked_ledPin).toggle();
+    }
 
 }

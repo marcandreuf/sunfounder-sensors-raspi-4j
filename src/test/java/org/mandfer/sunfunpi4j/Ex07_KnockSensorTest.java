@@ -21,28 +21,50 @@
 
 package org.mandfer.sunfunpi4j;
 
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.wiringpi.Gpio;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mandfer.categories.FastTest;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  *
  * @author marcandreuf
  */
-@Category(FastTest.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Gpio.class)
 public class Ex07_KnockSensorTest extends BaseSketchTest{
- 
+
+
     private Ex07_KnockSensor sketch;
     
     @Before
     public void setUp(){
+        PowerMockito.mockStatic(Gpio.class);
         sketch = new Ex07_KnockSensor(mocked_gpioController);
     }
     
     @Test
+    @Category(FastTest.class)
     public void verifySetup(){
-        //sketch.setup();
-    }    
+        sketch.setup();
+        
+        PowerMockito.verifyStatic();
+        Gpio.wiringPiSetup();
+        
+        verify(mocked_gpioController).provisionDigitalInputPin(RaspiPin.GPIO_00);
+        verify(mocked_gpioController).provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        verifyNoMoreInteractions(mocked_gpioController);
+    }   
 
 }

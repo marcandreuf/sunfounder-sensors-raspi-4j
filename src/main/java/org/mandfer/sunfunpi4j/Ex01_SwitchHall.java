@@ -29,7 +29,6 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */

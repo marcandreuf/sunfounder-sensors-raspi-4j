@@ -25,6 +25,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
@@ -84,7 +85,9 @@ public abstract class BaseSketch {
         logger.debug("Shutting down gpio.");
         if(gpio != null){
             for(GpioPin pin : gpio.getProvisionedPins()){
-                pin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
+                if(pin.getMode().equals(PinMode.DIGITAL_OUTPUT)){
+                    pin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
+                }
             }                
             gpio.shutdown();
         }

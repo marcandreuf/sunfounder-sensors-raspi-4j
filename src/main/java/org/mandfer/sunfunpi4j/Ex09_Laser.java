@@ -23,14 +23,18 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
 public class Ex09_Laser extends BaseSketch {    
    
+    private GpioPinDigitalOutput laserPin;
+    
     /**
      * @param gpio controller 
      */
@@ -45,12 +49,18 @@ public class Ex09_Laser extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        laserPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
+        logger.debug("Laser sensor ready!");         
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+            laserPin.high();
+            delay(500);
+            laserPin.low();
+            delay(500);
         }while(isNotInterrupted);
     }
 }

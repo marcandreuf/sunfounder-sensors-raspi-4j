@@ -11,7 +11,6 @@ import com.pi4j.wiringpi.SoftPwm;
 import java.awt.Color;
 
 /**
- * Base class with RBG methods
  * 
  * @author marcandreuf
  */

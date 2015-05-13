@@ -23,14 +23,19 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
 public class Ex14_LightBreak extends BaseSketch {    
-   
+    private GpioPinDigitalInput lightBreakPin;
+    private GpioPinDigitalOutput ledPin;
+    
     /**
      * @param gpio controller 
      */
@@ -45,12 +50,22 @@ public class Ex14_LightBreak extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        lightBreakPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Light break ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+            if(lightBreakPin.isHigh()){
+                logger.debug("led on !");
+                ledPin.high();
+            }else{
+                logger.debug("led off !");
+                ledPin.low();
+            }
         }while(isNotInterrupted);
     }
 }

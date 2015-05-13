@@ -23,14 +23,16 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
 public class Ex12_ActiveBuzzer extends BaseSketch {    
    
+    private GpioPinDigitalOutput buzzerPin;
     /**
      * @param gpio controller 
      */
@@ -45,12 +47,18 @@ public class Ex12_ActiveBuzzer extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        buzzerPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
+        logger.debug("Buzzer sensor ready!");
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+            buzzerPin.high();
+            delay(100);
+            buzzerPin.low();
+            delay(100);
         }while(isNotInterrupted);
     }
 }

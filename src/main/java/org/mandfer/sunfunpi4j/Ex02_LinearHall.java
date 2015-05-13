@@ -29,32 +29,13 @@ import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
-public class Ex02_LinearHall extends BaseSketch {    
-
+public class Ex02_LinearHall extends ADC_Base {
     private short intensity;
     
-    private GpioPinDigitalOutput ADC_CS;
-    private GpioPinDigitalOutput ADC_CLK;
-    private GpioPinDigitalMultipurpose ADC_DIO;
-    
     /**
-     * In this example we use type 'short'. In JAVA the type 'byte' is 
-     * signed and the values go from -128 to 127. There is no unsigned 'byte'
-     * type in JAVA. The next numeric type is 'short', 
-     * which is a 16-bit integer.  
-     * 
-     * Documentation about the Hall effect and the ADC0832CCN 
-     * 
-     * Hall effect sensing and application by Honeywell 
-     * http://sensing.honeywell.com/index.php?ci_id=47847 
-     * 
-     * Hall effect sensor 44E datasheet 
-     * http://www.allegromicro.com/~/media/Files/Datasheets/A3141-2-3-4-Datasheet.ashx
-     * 
      * @param gpio controller 
      */
     public Ex02_LinearHall(GpioController gpio){
@@ -65,19 +46,11 @@ public class Ex02_LinearHall extends BaseSketch {
         Ex02_LinearHall sketch = new Ex02_LinearHall( GpioFactory.getInstance());
         sketch.run(args);
     }    
-    
-    public short getIntensity(){
-        return intensity;
-    }
-    
+  
     @Override
     protected void setup() {
-        wiringPiSetup();
-        
-        ADC_CS = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
-        ADC_CLK = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
-        ADC_DIO = gpio.provisionDigitalMultipurposePin(RaspiPin.GPIO_02, PinMode.DIGITAL_OUTPUT);
-        logger.debug("Linear Hall ready!");        
+        super.setup();
+        logger.debug("Linear hall comparator sensor ready!");        
     }
 
     @Override
@@ -92,51 +65,7 @@ public class Ex02_LinearHall extends BaseSketch {
         }while(isNotInterrupted);
     }
     
-    private short get_ADC_Result(){        
-        short dat1=0, dat2=0;
-        
-        // Start converstaion        
-        ADC_CS.low();
-	
-	// MUX Start bit to setup MUX address (Multiplexer configuration)
-        ADC_CLK.low();
-        ADC_DIO.high(); delayMicrosendos(2);  // Start bit
-        ADC_CLK.high(); delayMicrosendos(2);         
-
-	// MUX SGL/-DIF git to setup Sigle-Ended channel type
-	ADC_CLK.low();
-        ADC_DIO.high(); delayMicrosendos(2);
-        ADC_CLK.high(); delayMicrosendos(2);
-        
-        // MUX ODD/SIGN bit to setup analog input in Channel #0
-        ADC_CLK.low();
-        ADC_DIO.low(); delayMicrosendos(2); 
-        ADC_CLK.high();        
-        
-        // Keep the clock going to settle the MUX address
-        delayMicrosendos(2);
-        ADC_CLK.low();
-        delayMicrosendos(2);
-
-	// Read MSB byte
-	ADC_DIO.setMode(PinMode.DIGITAL_INPUT);        
-        for(byte i=0; i<8; i++){
-            ADC_CLK.high(); delayMicrosendos(2);
-            ADC_CLK.low(); delayMicrosendos(2);
-            dat1 = (short) ((dat1 << 1) | ADC_DIO.getState().getValue());
-        }
-        // Read LSB byte
-        for(byte i=0; i<8; i++){
-            dat2 = (short) (dat2 | (ADC_DIO.getState().getValue() << i));
-            ADC_CLK.high(); delayMicrosendos(2);
-            ADC_CLK.low(); delayMicrosendos(2);
-        }
-        
-        // End of conversation.
-        ADC_CS.high();
-        
-        //If valid reading MSF == LSF
-        return dat1==dat2 ? dat1 : 0;        
+    public short getIntensity() {
+        return intensity;
     }
-
 }

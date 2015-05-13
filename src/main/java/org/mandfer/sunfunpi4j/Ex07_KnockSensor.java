@@ -23,13 +23,19 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
-public class Ex07_KnockSensor extends BaseSketch {    
+public class Ex07_KnockSensor extends BaseSketch {   
+    
+    private GpioPinDigitalInput knockPin;
+    private GpioPinDigitalOutput ledPin;
    
     /**
      * @param gpio controller 
@@ -45,12 +51,19 @@ public class Ex07_KnockSensor extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        knockPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("knock switch ready!");
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{     
+            if(knockPin.isLow()){
+                logger.debug("Detected knocking!");
+                ledPin.toggle();
+            }
         }while(isNotInterrupted);
     }
 }

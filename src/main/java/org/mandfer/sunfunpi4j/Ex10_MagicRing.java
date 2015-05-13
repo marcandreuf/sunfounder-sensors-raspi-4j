@@ -23,14 +23,20 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
 public class Ex10_MagicRing extends BaseSketch {    
    
+    private GpioPinDigitalInput switchPin;
+    private GpioPinDigitalOutput ledPin;
+    
     /**
      * @param gpio controller 
      */
@@ -45,12 +51,22 @@ public class Ex10_MagicRing extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        switchPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Shock switch ready!");     
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{    
+            if(switchPin.isLow()){
+                logger.debug("off !");
+                ledPin.low();
+            }else{
+                logger.debug("on !");
+                ledPin.high();
+            }
         }while(isNotInterrupted);
     }
 }

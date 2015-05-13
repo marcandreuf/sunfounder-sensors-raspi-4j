@@ -23,14 +23,23 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.GpioInterruptCallback;
+import com.pi4j.wiringpi.SoftTone;
+import static org.mandfer.sunfunpi4j.BaseSketch.logger;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */
 public class Ex13_ButtonInt extends BaseSketch {    
-   
+    private final int btnPin = 0;
+    private GpioPinDigitalOutput ledPin;
+    
     /**
      * @param gpio controller 
      */
@@ -45,12 +54,26 @@ public class Ex13_ButtonInt extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        if(Gpio.wiringPiISR(btnPin, Gpio.INT_EDGE_FALLING, new MyBtnIsr()) == -1){
+            logger.error("Setup ISR failed !");
+            throw new ExceptionInInitializerError("Setup ISR failed !");
+        }
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Button sensor ready!");    
+    }
+    private class MyBtnIsr implements GpioInterruptCallback {
+        @Override
+        public void callback(int i) {
+            ledPin.toggle();
+            logger.debug("Button is pressed. "+i);
+        }        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
         }while(isNotInterrupted);
     }
+    
 }

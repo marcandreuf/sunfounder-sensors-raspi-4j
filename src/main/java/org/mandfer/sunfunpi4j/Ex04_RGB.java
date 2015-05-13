@@ -26,7 +26,6 @@ import com.pi4j.io.gpio.GpioFactory;
 import java.awt.Color;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */

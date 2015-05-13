@@ -25,7 +25,6 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 
 /**
- * Blink led on GPIO 0
  *
  * @author marcandreuf
  */

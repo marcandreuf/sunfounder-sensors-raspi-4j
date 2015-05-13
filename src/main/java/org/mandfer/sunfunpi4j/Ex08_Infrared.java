@@ -23,14 +23,16 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * Blink led on GPIO 0
  *
- * @author marcandreuf
  */
 public class Ex08_Infrared extends BaseSketch {    
    
+    private GpioPinDigitalOutput irPin;
+    
     /**
      * @param gpio controller 
      */
@@ -45,12 +47,19 @@ public class Ex08_Infrared extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        irPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
+        logger.debug("Infrared sensor ready!");        
     }
 
     @Override
-    protected void loop(String[] args) {
-        do{                   
+    protected void loop(String[] args) {        
+        do{
+            logger.debug("Emitting...");
+            irPin.high();            
+            delay(500);
+            irPin.low();
+            delay(500);
         }while(isNotInterrupted);
     }
 }
