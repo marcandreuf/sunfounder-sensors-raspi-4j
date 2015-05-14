@@ -27,6 +27,7 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import static java.lang.Math.log;
 
 /**
  *
@@ -52,12 +53,26 @@ public class Ex11_01_AnalogTempSensor extends ADC_Base {
     }
 
     @Override
-    protected void loop(String[] args) {
-        short temp;
+    protected void loop(String[] args) {        
         do {
-            temp = (short) (60 - get_ADC_Result());
-            logger.debug("Current temperature: "+temp);
-            delay(500);
+            double resistance = getTempfromThermister(get_ADC_Result());
+            logger.debug("Resistor value: "+resistance);
+            //logger.debug("Current temperature: "+temp);
+            delay(1000);
         } while (isNotInterrupted);
+    }
+    
+    
+    private double getTempfromThermister(int rawADC) {
+        int KY_013Resistor = 10000;
+        double resisADC = ((256.0 / (double)rawADC)-1)*KY_013Resistor; 
+        
+        
+        double temp = log(((2560000/(double)rawADC) - 10000));
+        temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * temp * temp ))* temp );
+        return temp - 273.15;// Convert Kelvin to Celcius
+        
+        //double farenh = 4050.00 / Math.log(resisADC/(10000.00*Math.exp(-4050.00/298.00)));
+        //return farenh - 273.15;
     }
 }

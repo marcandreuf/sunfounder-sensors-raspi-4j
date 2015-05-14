@@ -72,7 +72,6 @@ public class Ex02_03_LinearHall extends ADC_Base {
     protected void loop(String[] args) {
         short analogVal;
         do {
-            ADC_DIO.setMode(PinMode.DIGITAL_OUTPUT);
             analogVal = get_ADC_Result();
             intensity = (short) (210 - analogVal);
             logger.debug("Current intensity of magnetic field: " + Integer.valueOf(intensity));

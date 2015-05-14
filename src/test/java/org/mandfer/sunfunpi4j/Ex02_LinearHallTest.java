@@ -90,7 +90,7 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
         sketch.setSketchInterruption();
         sketch.loop();
         
-        verify(mocked_ADC_DIO).setMode(PinMode.DIGITAL_OUTPUT);
+        verify(mocked_ADC_DIO, times(2)).setMode(PinMode.DIGITAL_OUTPUT);
         verify(mocked_ADC_CS).low();
         verify(mocked_ADC_CLK, times(20)).low();
         verify(mocked_ADC_CLK, times(19)).high();

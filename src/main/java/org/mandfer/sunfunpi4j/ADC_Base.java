@@ -37,6 +37,9 @@ public abstract class ADC_Base extends BaseSketch {
     protected short get_ADC_Result() {
         short dat1 = 0, dat2 = 0;
 
+        // Prepare ACD_DIO for MUX addess configuration 
+        ADC_DIO.setMode(PinMode.DIGITAL_OUTPUT);
+        
         // Start converstaion        
         ADC_CS.low();
 
@@ -82,7 +85,6 @@ public abstract class ADC_Base extends BaseSketch {
             ADC_CLK.low();
             delayMicrosendos(2);
         }
-
         // End of conversation.
         ADC_CS.high();
 
