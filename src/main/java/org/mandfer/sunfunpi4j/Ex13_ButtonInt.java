@@ -23,12 +23,10 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.wiringpi.GpioInterruptCallback;
-import com.pi4j.wiringpi.SoftTone;
 import static org.mandfer.sunfunpi4j.BaseSketch.logger;
 import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
@@ -37,6 +35,11 @@ import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
  * @author marcandreuf
  */
 public class Ex13_ButtonInt extends BaseSketch {    
+    
+    public static void main(String[] args) throws InterruptedException {
+        Ex13_ButtonInt sketch = new Ex13_ButtonInt(GpioFactory.getInstance());
+        sketch.run(args);
+    }
     private final int btnPin = 0;
     private GpioPinDigitalOutput ledPin;
     
@@ -45,11 +48,6 @@ public class Ex13_ButtonInt extends BaseSketch {
      */
     public Ex13_ButtonInt(GpioController gpio){
         super(gpio);
-    }
-    
-    public static void main(String[] args) throws InterruptedException {
-        Ex13_ButtonInt sketch = new Ex13_ButtonInt(GpioFactory.getInstance());
-        sketch.run(args);
     }
     
     @Override
@@ -62,6 +60,7 @@ public class Ex13_ButtonInt extends BaseSketch {
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
         logger.debug("Button sensor ready!");    
     }
+    
     private class MyBtnIsr implements GpioInterruptCallback {
         @Override
         public void callback(int i) {
@@ -69,11 +68,12 @@ public class Ex13_ButtonInt extends BaseSketch {
             logger.debug("Button is pressed. "+i);
         }        
     }
-
+    
     @Override
     protected void loop(String[] args) {
         do{
         }while(isNotInterrupted);
     }
+    
     
 }

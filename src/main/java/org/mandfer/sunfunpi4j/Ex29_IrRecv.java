@@ -23,6 +23,9 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.GpioInterruptCallback;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
  *
@@ -30,6 +33,9 @@ import com.pi4j.io.gpio.GpioFactory;
  */
 public class Ex29_IrRecv extends BaseSketch {    
    
+    private int count;
+    private final int isrPin = 0;
+    
     /**
      * @param gpio controller 
      */
@@ -44,12 +50,24 @@ public class Ex29_IrRecv extends BaseSketch {
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        if(Gpio.wiringPiISR(isrPin, Gpio.INT_EDGE_FALLING, new MyISR()) == -1){
+            logger.error("Setup ISR failed !");
+            throw new ExceptionInInitializerError("Setup ISR failed !");
+        }
+        logger.debug("Infrared receiver sensor ready!");           
+    }
+    
+    private class MyISR implements GpioInterruptCallback {
+        @Override
+        public void callback(int i) {
+            logger.debug("Received infrared count = "+count);
+        }
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{            
         }while(isNotInterrupted);
     }
 }

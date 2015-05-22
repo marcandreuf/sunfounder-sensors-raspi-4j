@@ -27,7 +27,6 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import static java.lang.Math.log;
 
 /**
  * This code has been tunner with the NTC thermistor datasheet from Murata.
@@ -77,9 +76,11 @@ public class Ex11_01_AnalogTempSensor extends ADC_Base {
     
     
     private double getTempfromThermister(double rawADC) {
-        double KY_013Resistor = 10000;        
-        double b_constant = 3380.0;
-        double t0 = 298; // 273 + 25
+        double KY_013Resistor = 10000; // For a 10k resistance thermistor.
+        // The b_constant value its been extracted from the datasheet for a 
+        // 10K thermistor NXRT15XH103FA5B, which is closer sensor I found.
+        double b_constant = 3380.0; 
+        double t0 = 298; // 273 + 25, constant of the S.Hart equation.
         double celciusAdjustment = 273.15;
         double adc8BitPrecision = 256;
         
