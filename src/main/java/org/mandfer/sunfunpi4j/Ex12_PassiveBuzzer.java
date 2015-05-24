@@ -100,10 +100,12 @@ public class Ex12_PassiveBuzzer extends BaseSketch {
                 SoftTone.softToneWrite(BUZPIN, song_1[i]);
                 delay(beat_1[i] * 500);
             }
+            logger.info("Song 1 played...");
             for(int i=0; i<song_2.length/4; i++){
                 SoftTone.softToneWrite(BUZPIN, song_2[i]);
                 delay(beat_2[i] * 500);
-            }            
+            }
+            logger.info("Song 2 played...");
         }while(isNotInterrupted);
         SoftTone.softToneStop(BUZPIN);
     }

@@ -58,7 +58,7 @@ public class Ex12_ActiveBuzzer extends BaseSketch {
             buzzerPin.high();
             delay(100);
             buzzerPin.low();
-            delay(100);
+            delay(100);           
         }while(isNotInterrupted);
     }
 }
