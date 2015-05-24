@@ -23,13 +23,19 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex11_02_AnalogTempSensor extends ADC_Base {    
+public class Ex11_02_AnalogTempSensor extends BaseSketch {    
    
+    private GpioPinDigitalInput digitalInputPin;
+    private GpioPinDigitalOutput ledPin;
+    
     /**
      * @param gpio controller 
      */
@@ -44,17 +50,23 @@ public class Ex11_02_AnalogTempSensor extends ADC_Base {
     
     @Override
     protected void setup() {
-        super.setup();
-        logger.debug("Analog temp sensor ready!");
+        wiringPiSetup();
+        digitalInputPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Digital temp sensor ready!");
     }
 
     @Override
     protected void loop(String[] args) {
-        short temp;
         do{
-          temp = (short) (140 - get_ADC_Result());
-            logger.debug("Current temperature: "+temp);
-            delay(500);  
+            if(digitalInputPin.isHigh()){
+                ledPin.high();
+                logger.debug("Threshold reached !");
+            }else{
+                ledPin.low();
+                logger.debug("Threshold not reached !");
+            }
+            delay(500);
         }while(isNotInterrupted);
     }
 }
