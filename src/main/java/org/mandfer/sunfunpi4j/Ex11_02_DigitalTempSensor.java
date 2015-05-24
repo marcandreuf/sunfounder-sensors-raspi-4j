@@ -31,7 +31,7 @@ import com.pi4j.io.gpio.RaspiPin;
  *
  * @author marcandreuf
  */
-public class Ex11_02_AnalogTempSensor extends BaseSketch {    
+public class Ex11_02_DigitalTempSensor extends BaseSketch {    
    
     private GpioPinDigitalInput digitalInputPin;
     private GpioPinDigitalOutput ledPin;
@@ -39,12 +39,12 @@ public class Ex11_02_AnalogTempSensor extends BaseSketch {
     /**
      * @param gpio controller 
      */
-    public Ex11_02_AnalogTempSensor(GpioController gpio){
+    public Ex11_02_DigitalTempSensor(GpioController gpio){
         super(gpio);
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex11_02_AnalogTempSensor sketch = new Ex11_02_AnalogTempSensor(GpioFactory.getInstance());
+        Ex11_02_DigitalTempSensor sketch = new Ex11_02_DigitalTempSensor(GpioFactory.getInstance());
         sketch.run(args);
     }
     

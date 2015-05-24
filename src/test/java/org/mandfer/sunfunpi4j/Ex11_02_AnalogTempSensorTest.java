@@ -33,11 +33,11 @@ import org.mandfer.categories.FastTest;
 @Category(FastTest.class)
 public class Ex11_02_AnalogTempSensorTest extends BaseSketchTest{
  
-    private Ex11_02_AnalogTempSensor sketch;
+    private Ex11_02_DigitalTempSensor sketch;
     
     @Before
     public void setUp(){
-        sketch = new Ex11_02_AnalogTempSensor(mocked_gpioController);
+        sketch = new Ex11_02_DigitalTempSensor(mocked_gpioController);
     }
     
     @Test
