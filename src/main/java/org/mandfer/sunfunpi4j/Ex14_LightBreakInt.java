@@ -25,48 +25,57 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.GpioInterruptCallback;
 import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex14_LightBreak extends BaseSketch {    
+public class Ex14_LightBreakInt extends BaseSketch {    
     private GpioPinDigitalInput lightBreakPin;
     private GpioPinDigitalOutput ledPin;
     
     /**
      * @param gpio controller 
      */
-    public Ex14_LightBreak(GpioController gpio){
+    public Ex14_LightBreakInt(GpioController gpio){
         super(gpio);
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex14_LightBreak sketch = new Ex14_LightBreak(GpioFactory.getInstance());
+        Ex14_LightBreakInt sketch = new Ex14_LightBreakInt(GpioFactory.getInstance());
         sketch.run(args);
     }
     
     @Override
     protected void setup() {
         wiringPiSetup();
-        lightBreakPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
-        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);        
+        lightBreakPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        
+        lightBreakPin.addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+                if(event.getState().isHigh()){
+                    logger.debug("Light beam is broken");
+                    ledPin.high();
+                }else{
+                    ledPin.low();
+                }
+            }
+            
+        });
         logger.debug("Light break ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
         do{
-            if(lightBreakPin.isHigh()){
-                logger.debug("led on !");
-                ledPin.high();
-            }else{
-                logger.debug("led off !");
-                ledPin.low();
-            }
-            delay(500);
         }while(isNotInterrupted);
     }
 }

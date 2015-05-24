@@ -23,10 +23,12 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.wiringpi.Gpio;
-import com.pi4j.wiringpi.GpioInterruptCallback;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import static org.mandfer.sunfunpi4j.BaseSketch.logger;
 import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
@@ -40,7 +42,8 @@ public class Ex13_ButtonInt extends BaseSketch {
         Ex13_ButtonInt sketch = new Ex13_ButtonInt(GpioFactory.getInstance());
         sketch.run(args);
     }
-    private final int btnPin = 0;
+
+    private GpioPinDigitalInput myButton;
     private GpioPinDigitalOutput ledPin;
     
     /**
@@ -53,22 +56,21 @@ public class Ex13_ButtonInt extends BaseSketch {
     @Override
     protected void setup() {
         wiringPiSetup();
-        if(Gpio.wiringPiISR(btnPin, Gpio.INT_EDGE_FALLING, new MyBtnIsr()) == -1){
-            logger.error("Setup ISR failed !");
-            throw new ExceptionInInitializerError("Setup ISR failed !");
-        }
-        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);        
+        myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        
+        myButton.addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+                if(event.getState().isLow()){
+                    logger.debug("Button is pressed");
+                    ledPin.toggle();
+                }
+            }
+            
+        });
         logger.debug("Button sensor ready!");    
     }
-    
-    private class MyBtnIsr implements GpioInterruptCallback {
-        @Override
-        public void callback(int i) {
-            ledPin.toggle();
-            logger.debug("Button is pressed. "+i);
-        }        
-    }
-    
+        
     @Override
     protected void loop(String[] args) {
         do{
