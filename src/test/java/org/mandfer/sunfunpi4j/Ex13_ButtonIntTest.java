@@ -33,11 +33,11 @@ import org.mandfer.categories.FastTest;
 @Category(FastTest.class)
 public class Ex13_ButtonIntTest extends BaseSketchTest{
  
-    private Ex13_ButtonInt sketch;
+    private Ex13_ButtonListener sketch;
     
     @Before
     public void setUp(){
-        sketch = new Ex13_ButtonInt(mocked_gpioController);
+        sketch = new Ex13_ButtonListener(mocked_gpioController);
     }
     
     @Test

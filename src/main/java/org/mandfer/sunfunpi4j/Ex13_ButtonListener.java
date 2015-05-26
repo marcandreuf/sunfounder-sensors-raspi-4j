@@ -36,10 +36,10 @@ import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
  *
  * @author marcandreuf
  */
-public class Ex13_ButtonInt extends BaseSketch {    
+public class Ex13_ButtonListener extends BaseSketch {    
     
     public static void main(String[] args) throws InterruptedException {
-        Ex13_ButtonInt sketch = new Ex13_ButtonInt(GpioFactory.getInstance());
+        Ex13_ButtonListener sketch = new Ex13_ButtonListener(GpioFactory.getInstance());
         sketch.run(args);
     }
 
@@ -49,7 +49,7 @@ public class Ex13_ButtonInt extends BaseSketch {
     /**
      * @param gpio controller 
      */
-    public Ex13_ButtonInt(GpioController gpio){
+    public Ex13_ButtonListener(GpioController gpio){
         super(gpio);
     }
     

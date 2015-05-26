@@ -25,49 +25,54 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex15_TiltSwitch extends BaseSketch {    
+public class Ex15_TiltSwitchListener extends BaseSketch {    
     private GpioPinDigitalInput tiltSwitch;
     private GpioPinDigitalOutput ledPin;
     
     /**
      * @param gpio controller 
      */
-    public Ex15_TiltSwitch(GpioController gpio){
+    public Ex15_TiltSwitchListener(GpioController gpio){
         super(gpio);
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex15_TiltSwitch sketch = new Ex15_TiltSwitch(GpioFactory.getInstance());
+        Ex15_TiltSwitchListener sketch = new Ex15_TiltSwitchListener(GpioFactory.getInstance());
         sketch.run(args);
     }
     
     @Override
     protected void setup() {
         wiringPiSetup();
-        tiltSwitch = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
-        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);        
+        tiltSwitch = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        
+        tiltSwitch.addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+                logger.debug("Tilt state: "+event.getState());
+                if(event.getState().isHigh()){
+                    ledPin.high();
+                }else{
+                    ledPin.low();
+                }
+            }            
+        });
         logger.debug("Tilt switch sensor ready!"); 
     }
 
     @Override
     protected void loop(String[] args) {
-        do{
-            if(tiltSwitch.isHigh()){
-                logger.debug("led on !");
-                ledPin.high();
-            }else{
-                logger.debug("led off !");
-                ledPin.low();
-            }
-            delay(500);
-            ledPin.low();
+        do{           
         }while(isNotInterrupted);
     }
 }
