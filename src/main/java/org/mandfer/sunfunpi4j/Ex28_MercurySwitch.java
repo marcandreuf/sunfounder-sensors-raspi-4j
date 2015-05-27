@@ -23,28 +23,53 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.GpioInterrupt;
+import com.pi4j.wiringpi.GpioInterruptEvent;
+import com.pi4j.wiringpi.GpioInterruptListener;
+import com.pi4j.wiringpi.GpioUtil;
+import static org.mandfer.sunfunpi4j.BaseSketch.logger;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex28_Mq2Switch extends BaseSketch {    
+public class Ex28_MercurySwitch extends BaseSketch {    
    
+    private GpioPinDigitalInput mercuryPin;
+    
     /**
      * @param gpio controller 
      */
-    public Ex28_Mq2Switch(GpioController gpio){
+    public Ex28_MercurySwitch(GpioController gpio){
         super(gpio);
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex28_Mq2Switch sketch = new Ex28_Mq2Switch(GpioFactory.getInstance());
+        Ex28_MercurySwitch sketch = new Ex28_MercurySwitch(GpioFactory.getInstance());
         sketch.run(args);
     }
     
     @Override
     protected void setup() {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        mercuryPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        
+        mercuryPin.addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+                if(event.getState().isLow()){
+                    logger.debug("Led on !");
+                }
+            }
+            
+        });        
+        logger.debug("Mercury switch sensor ready.");
     }
 
     @Override

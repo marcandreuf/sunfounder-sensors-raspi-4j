@@ -33,11 +33,11 @@ import org.mandfer.categories.FastTest;
 @Category(FastTest.class)
 public class Ex28_Mq2SwitchTest extends BaseSketchTest{
  
-    private Ex28_Mq2Switch sketch;
+    private Ex28_MercurySwitch sketch;
     
     @Before
     public void setUp(){
-        sketch = new Ex28_Mq2Switch(mocked_gpioController);
+        sketch = new Ex28_MercurySwitch(mocked_gpioController);
     }
     
     @Test
