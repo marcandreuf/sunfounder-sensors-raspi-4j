@@ -43,7 +43,7 @@ public class Ex05_DoubleColorLed extends RGB_Base {
     }    
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         ledInit(LEDPINRED, LEDPINYELLOW);
         logger.debug("Double color led ready!");        

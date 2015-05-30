@@ -43,7 +43,7 @@ public class Ex20_DHT11 extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         logger.debug("Sketch ready!");        
     }
 

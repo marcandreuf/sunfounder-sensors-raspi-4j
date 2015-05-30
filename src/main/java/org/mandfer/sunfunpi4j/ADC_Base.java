@@ -27,7 +27,7 @@ public abstract class ADC_Base extends BaseSketch {
     }
 
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         ADC_CS = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
         ADC_CLK = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);

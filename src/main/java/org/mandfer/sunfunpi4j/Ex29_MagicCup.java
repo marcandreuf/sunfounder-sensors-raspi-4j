@@ -49,7 +49,7 @@ public class Ex29_MagicCup extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         sigPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
         logger.debug("Magic sensor ready!");        

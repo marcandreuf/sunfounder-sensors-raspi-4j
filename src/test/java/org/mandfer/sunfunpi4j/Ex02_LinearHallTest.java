@@ -70,7 +70,7 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
     
     @Test
     public void verifySetup(){
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         
         PowerMockito.verifyStatic();
         Gpio.wiringPiSetup();
@@ -86,7 +86,7 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
         prepareMockedPins();
         when(mocked_ADC_DIO.getState()).thenReturn(PinState.LOW);        
                 
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         sketch.setSketchInterruption();
         sketch.loop();
         
@@ -134,7 +134,7 @@ public class Ex02_LinearHallTest extends BaseSketchTest{
                       PinState.HIGH //1
                       );        
                 
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         sketch.setSketchInterruption();
         sketch.loop();
        

@@ -21,35 +21,39 @@
 
 package org.mandfer.sunfunpi4j;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.mandfer.categories.FastTest;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex16_Ds18b20_2 extends BaseSketch {    
-   
-    /**
-     * @param gpio controller 
-     */
-    public Ex16_Ds18b20_2(GpioController gpio){
-        super(gpio);
+@Category(FastTest.class)
+public class Ex16_Ds18b20Test extends BaseSketchTest{
+ 
+    private Ex16_Ds18b20 sketch;
+    
+    @Before
+    public void setUp(){
+        sketch = new Ex16_Ds18b20(mocked_gpioController);
     }
     
-    public static void main(String[] args) throws InterruptedException {
-        Ex16_Ds18b20_2 sketch = new Ex16_Ds18b20_2(GpioFactory.getInstance());
-        sketch.run(args);
-    }
-    
-    @Override
-    protected void setup() {
-        logger.debug("Sketch ready!");        
-    }
+    @Test
+    public void testReadDataFromFile() throws URISyntaxException{   
+        
+        String sampleFile = Paths
+          .get(getClass().getResource("/Ex16_Ds18b20_sample_w1Slave").toURI())
+          .toString();
+        
+        double temp = Ex16_Ds18b20.readTempFromFile(sampleFile);
+        
+        assertTrue(temp == 23.062);
+        
+    }    
 
-    @Override
-    protected void loop(String[] args) {
-        do{                   
-        }while(isNotInterrupted);
-    }
 }

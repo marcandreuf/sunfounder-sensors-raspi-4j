@@ -57,7 +57,7 @@ public class Ex04_RGBTest extends BaseSketchTest{
     @Test
     @Category(FastTest.class)
     public void verifySetup(){
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         
         PowerMockito.verifyStatic();
         Gpio.wiringPiSetup();
@@ -73,7 +73,7 @@ public class Ex04_RGBTest extends BaseSketchTest{
     @Test
     @Category(SlowTest.class)
     public void turnOffLedBeforeFinishSketch() throws InterruptedException{
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         sketch.setSketchInterruption();
         sketch.loop();
         

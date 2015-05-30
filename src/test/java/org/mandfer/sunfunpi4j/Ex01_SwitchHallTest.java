@@ -56,7 +56,7 @@ public class Ex01_SwitchHallTest extends BaseSketchTest{
     @Test
     @Category(FastTest.class)
     public void verifySetup(){
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         
         verify(mocked_gpioController).provisionDigitalInputPin(RaspiPin.GPIO_00);
         verify(mocked_gpioController).provisionDigitalOutputPin(RaspiPin.GPIO_01);
@@ -69,7 +69,7 @@ public class Ex01_SwitchHallTest extends BaseSketchTest{
         prepareMockedPins();                
         when(mocked_hallPin.isLow()).thenReturn(false);
         
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         sketch.setSketchInterruption();
         sketch.loop();
         
@@ -90,7 +90,7 @@ public class Ex01_SwitchHallTest extends BaseSketchTest{
                 
         when(mocked_hallPin.isLow()).thenReturn(true, true, false);
         
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         sketch.setSketchInterruption();
         sketch.loop();
         

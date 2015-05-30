@@ -43,7 +43,7 @@ public class Ex24_FlameSensor extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         logger.debug("Sketch ready!");        
     }
 

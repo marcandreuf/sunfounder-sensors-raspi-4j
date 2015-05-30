@@ -48,7 +48,7 @@ public class Ex09_Laser extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+        protected void setup(String[] args) {
         wiringPiSetup();
         laserPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
         logger.debug("Laser sensor ready!");         

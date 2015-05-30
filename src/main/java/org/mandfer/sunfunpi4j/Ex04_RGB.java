@@ -44,7 +44,7 @@ public class Ex04_RGB extends RGB_Base {
     }    
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         ledInit(LEDPINRED, LEDPINGREEN, LEDPINBLUE);
         logger.debug("Rgb ready!");        

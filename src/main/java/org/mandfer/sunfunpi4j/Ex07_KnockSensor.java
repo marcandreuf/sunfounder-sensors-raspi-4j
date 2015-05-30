@@ -50,7 +50,7 @@ public class Ex07_KnockSensor extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         knockPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);

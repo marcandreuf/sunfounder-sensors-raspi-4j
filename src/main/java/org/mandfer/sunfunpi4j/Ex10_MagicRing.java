@@ -50,7 +50,7 @@ public class Ex10_MagicRing extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+        protected void setup(String[] args) {
         wiringPiSetup();
         switchPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);

@@ -46,7 +46,7 @@ public class Ex08_Infrared extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         irPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
         logger.debug("Infrared sensor ready!");        

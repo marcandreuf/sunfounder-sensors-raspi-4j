@@ -53,7 +53,7 @@ public abstract class BaseSketch {
     protected boolean isNotInterrupted = true;
     protected static final CountDownLatch countDownLatchEndSketch = new CountDownLatch(1);
 
-    protected abstract void setup();
+    protected abstract void setup(String[] args);
     protected abstract void loop(String[] args) throws InterruptedException;   
     
     protected void loop() throws InterruptedException{
@@ -69,7 +69,7 @@ public abstract class BaseSketch {
     }
 
     protected void run(String[] args) throws InterruptedException {
-        setup();
+        setup(args);
         startThreadToCheckInputStream();
         loop(args);
         tearDown();

@@ -39,6 +39,7 @@ public abstract class BaseSketchTest {
     
     protected final Logger logger = LoggerFactory.getLogger(BaseSketch.class.getName());
     protected final GpioController mocked_gpioController;
+    protected final static String[] NO_ARGS = null;
         
     public BaseSketchTest(){
         mocked_gpioController = mock(GpioController.class);

@@ -63,8 +63,8 @@ public class Ex02_03_LinearHall extends ADC_Base {
     }
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected void setup(String[] args) {
+        super.setup(args);
         logger.debug("Linear Hall sensor ready!");
     }
 

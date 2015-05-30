@@ -49,7 +49,7 @@ public class Ex29_IrRecv extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         if(Gpio.wiringPiISR(isrPin, Gpio.INT_EDGE_FALLING, new MyISR()) == -1){
             logger.error("Setup ISR failed !");

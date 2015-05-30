@@ -54,7 +54,7 @@ public class Ex05_DoubleColorLedTest extends BaseSketchTest{
     @Test
     @Category(FastTest.class)
     public void verifySetup(){
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         
         PowerMockito.verifyStatic();
         Gpio.wiringPiSetup();

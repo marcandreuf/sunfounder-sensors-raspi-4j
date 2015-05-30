@@ -83,7 +83,7 @@ public class Ex12_PassiveBuzzer extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         if(SoftTone.softToneCreate(BUZPIN)==-1){
             logger.error("Setup softTone failed !");

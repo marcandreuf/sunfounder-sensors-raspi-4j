@@ -54,7 +54,7 @@ public class Ex29_MagicCupInt extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);        
         sigPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        

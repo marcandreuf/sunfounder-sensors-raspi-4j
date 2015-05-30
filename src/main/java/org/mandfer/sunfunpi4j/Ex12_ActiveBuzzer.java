@@ -46,7 +46,7 @@ public class Ex12_ActiveBuzzer extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         buzzerPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
         logger.debug("Buzzer sensor ready!");

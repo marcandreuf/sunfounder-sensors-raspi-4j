@@ -48,7 +48,7 @@ public class Ex01_SwitchHall extends BaseSketch {
     }    
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         hallPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
         logger.debug("Hall switch ready!");

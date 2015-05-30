@@ -65,7 +65,7 @@ public class Ex06_ShockSwitchTest extends BaseSketchTest{
     @Test
     @Category(FastTest.class)
     public void verifySetup(){
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         
         PowerMockito.verifyStatic();
         Gpio.wiringPiSetup();
@@ -82,7 +82,7 @@ public class Ex06_ShockSwitchTest extends BaseSketchTest{
         when(mocked_gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_01)).thenReturn(mocked_ledPin);
         when(mocked_shockPin.isLow()).thenReturn(Boolean.TRUE);
         
-        sketch.setup();
+        sketch.setup(NO_ARGS);
         sketch.setSketchInterruption();
         sketch.loop();
         

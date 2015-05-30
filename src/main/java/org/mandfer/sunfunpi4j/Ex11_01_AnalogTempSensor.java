@@ -60,8 +60,8 @@ public class Ex11_01_AnalogTempSensor extends ADC_Base {
     }
 
     @Override
-    protected void setup() {
-        super.setup();
+    protected void setup(String[] args) {
+        super.setup(args);
         logger.debug("Analog temp sensor ready!");
     }
 

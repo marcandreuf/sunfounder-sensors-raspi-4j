@@ -54,7 +54,7 @@ public class Ex14_LightBreakInt extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);        
         lightBreakPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        

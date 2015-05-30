@@ -45,8 +45,8 @@ public class Ex02_LinearHall extends ADC_Base {
     }    
   
     @Override
-    protected void setup() {
-        super.setup();
+    protected void setup(String[] args) {
+        super.setup(args);
         logger.debug("Linear hall comparator sensor ready!");        
     }
 

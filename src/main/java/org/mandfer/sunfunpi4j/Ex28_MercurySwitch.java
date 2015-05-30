@@ -57,7 +57,7 @@ public class Ex28_MercurySwitch extends BaseSketch {
     }
     
     @Override
-    protected void setup() {
+    protected void setup(String[] args) {
         wiringPiSetup();
         mercuryPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        
         mercuryPin.addListener(new GpioPinListenerDigital() {
