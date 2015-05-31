@@ -29,8 +29,6 @@ import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
-import com.pi4j.wiringpi.Gpio;
-import com.pi4j.wiringpi.GpioInterruptCallback;
 import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
