@@ -70,7 +70,7 @@ public class Ex11_01_AnalogTempSensor extends ADC_Base {
         do {
             double temp = getTempfromThermister(get_ADC_Result());
             logger.debug("Current temperature: "+temp);
-            delay(1000);
+            delayMilliseconds(1000);
         } while (isNotInterrupted);
     }
     

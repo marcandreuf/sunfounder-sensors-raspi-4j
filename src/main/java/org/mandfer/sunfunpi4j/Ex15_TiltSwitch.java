@@ -66,7 +66,7 @@ public class Ex15_TiltSwitch extends BaseSketch {
                 logger.debug("led off !");
                 ledPin.low();
             }
-            delay(500);
+            delayMilliseconds(500);
             ledPin.low();
         }while(isNotInterrupted);
     }

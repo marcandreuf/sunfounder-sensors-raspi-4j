@@ -75,7 +75,10 @@ public class Ex14_LightBreakInt extends BaseSketch {
 
     @Override
     protected void loop(String[] args) {
-        do{
-        }while(isNotInterrupted);
+        try {
+            countDownLatchEndSketch.await();
+        } catch (InterruptedException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
 }

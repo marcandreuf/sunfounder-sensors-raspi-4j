@@ -53,15 +53,15 @@ public class Ex05_DoubleColorLed extends RGB_Base {
     protected void loop(String[] args) {
         do{
             ledColorSet(0xff,0x00);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0x00,0xff);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0xff,0x45);	
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0xff,0xff);	
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0x7c,0xfc);	
-            delay(500); 
+            delayMilliseconds(500); 
         }while(isNotInterrupted);
         turnLedOff();
     }

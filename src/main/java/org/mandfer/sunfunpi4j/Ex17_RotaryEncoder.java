@@ -68,7 +68,7 @@ public class Ex17_RotaryEncoder extends BaseSketch {
                 globalCounter = 0;
             }
         });
-        logger.debug("Sketch ready!");        
+        logger.debug("Rotary encoder ready!");        
     }
 
     @Override

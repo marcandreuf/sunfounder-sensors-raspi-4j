@@ -28,8 +28,8 @@ import com.pi4j.io.gpio.GpioFactory;
  *
  * @author marcandreuf
  */
-public class Ex19_PhotoResistor extends BaseSketch {    
-   
+public class Ex19_PhotoResistor extends ADC_Base {    
+    private short illum;
     /**
      * @param gpio controller 
      */
@@ -44,12 +44,36 @@ public class Ex19_PhotoResistor extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
+        super.setup(args);
         logger.debug("Sketch ready!");        
     }
+    
+    //http://home.roboticlab.eu/en/examples/sensor/photoresistor
 
     @Override
     protected void loop(String[] args) {
-        do{                   
-        }while(isNotInterrupted);
+        short analogVal;
+        double voltage;
+        double resistance;
+        double illuminance;
+        do {
+            analogVal = get_ADC_Result();
+            illum = (short) (210 - analogVal);
+            logger.debug("Current illumination: " + Integer.valueOf(illum));
+            
+            // U = Uref * (ADC / 256)
+            voltage = (float) ((analogVal / 256) * 5);
+            logger.debug("Current voltage: "+voltage);
+            
+            //With a R2 of 10k
+            // R = (R2*Uref)/U2-R2
+            resistance = (10*5)/voltage-10;
+            logger.debug("Resistance: "+resistance);
+                        
+            illuminance = 255.84 * Math.pow(resistance, -10/9);
+            logger.debug("Light intensisty in LUX: "+illuminance);
+                                    
+            delayMilliseconds(1000);
+        } while (isNotInterrupted);
     }
 }

@@ -75,7 +75,7 @@ public class Ex02_03_LinearHall extends ADC_Base {
             analogVal = get_ADC_Result();
             intensity = (short) (210 - analogVal);
             logger.debug("Current intensity of magnetic field: " + Integer.valueOf(intensity));
-            delay(500);
+            delayMilliseconds(500);
         } while (isNotInterrupted);
     }
     

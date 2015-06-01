@@ -23,6 +23,9 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
@@ -30,6 +33,9 @@ import com.pi4j.io.gpio.GpioFactory;
  */
 public class Ex22_TrackSensor extends BaseSketch {    
    
+    private GpioPinDigitalInput trackSensorPin;
+    private GpioPinDigitalOutput ledPin;
+    
     /**
      * @param gpio controller 
      */
@@ -44,12 +50,24 @@ public class Ex22_TrackSensor extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        trackSensorPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Track sensor ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+            if(trackSensorPin.isLow()){
+                logger.debug("White line is detected");
+                ledPin.low();  // led on
+                delayMilliseconds(100);
+                ledPin.high(); // led off
+            }else{
+                logger.debug("... Black line is detected");
+                delayMilliseconds(100);
+            }
         }while(isNotInterrupted);
     }
 }

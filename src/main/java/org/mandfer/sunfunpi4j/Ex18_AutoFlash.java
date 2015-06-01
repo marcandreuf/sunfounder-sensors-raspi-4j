@@ -23,6 +23,8 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
@@ -30,6 +32,8 @@ import com.pi4j.io.gpio.GpioFactory;
  */
 public class Ex18_AutoFlash extends BaseSketch {    
    
+    private GpioPinDigitalOutput ledPin;
+    
     /**
      * @param gpio controller 
      */
@@ -44,12 +48,15 @@ public class Ex18_AutoFlash extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);
+        logger.debug("Auto flash ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+          ledPin.high();
         }while(isNotInterrupted);
     }
 }

@@ -61,9 +61,9 @@ public class Ex13_Button extends BaseSketch {
     protected void loop(String[] args) {
         do{
           if(btnPin.isLow()){
-              delay(10);
+              delayMilliseconds(10);
               if(btnPin.isLow()){
-                  while(btnPin.isLow());
+                  while(btnPin.isLow() && isNotInterrupted);
                   ledPin.toggle();
                   logger.debug("Button is pressed");
               }

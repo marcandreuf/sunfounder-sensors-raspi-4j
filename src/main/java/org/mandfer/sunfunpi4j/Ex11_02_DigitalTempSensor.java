@@ -66,7 +66,7 @@ public class Ex11_02_DigitalTempSensor extends BaseSketch {
                 ledPin.low();
                 logger.debug("Threshold not reached !");
             }
-            delay(500);
+            delayMilliseconds(500);
         }while(isNotInterrupted);
     }
 }

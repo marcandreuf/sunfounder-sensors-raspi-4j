@@ -58,9 +58,9 @@ public class Ex09_Laser extends BaseSketch {
     protected void loop(String[] args) {
         do{
             laserPin.high();
-            delay(500);
+            delayMilliseconds(500);
             laserPin.low();
-            delay(500);
+            delayMilliseconds(500);
         }while(isNotInterrupted);
     }
 }

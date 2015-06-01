@@ -29,42 +29,63 @@ import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.GpioInterruptCallback;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.mandfer.sunfunpi4j.BaseSketch.logger;
+import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex21_Obstacle01 extends BaseSketch {    
-    private GpioPinDigitalInput obstaclePin;
+public class Ex13_ButtonISR extends BaseSketch {    
+
+    private static final int btnPin = 0;
+    private static final int ledPin = 1;
+    
+    public static void main(String[] args) throws InterruptedException {
+        Ex13_ButtonISR sketch = new Ex13_ButtonISR(GpioFactory.getInstance());
+        sketch.run(args);
+    }
+
     
     /**
      * @param gpio controller 
      */
-    public Ex21_Obstacle01(GpioController gpio){
+    public Ex13_ButtonISR(GpioController gpio){
         super(gpio);
-    }
-    
-    public static void main(String[] args) throws InterruptedException {
-        Ex21_Obstacle01 sketch = new Ex21_Obstacle01(GpioFactory.getInstance());
-        sketch.run(args);
     }
     
     @Override
     protected void setup(String[] args) {
-        wiringPiSetup();
-        obstaclePin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);        
-        obstaclePin.addListener(new GpioPinListenerDigital() {
-            @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-                if(event.getState().isHigh()){
-                    logger.debug("Detected Barrier !");
-                }
-            }            
-        });
-        logger.debug("Obstacle sensor ready!");        
+        gpioIsrSetup();
+        logger.debug("Button ISR ready.");
     }
-
+        
+    
+    private static long lastTime = System.currentTimeMillis();;
+    private static void gpioIsrSetup() {
+        wiringPiSetup();
+        Gpio.pinMode(btnPin, Gpio.INPUT);
+        Gpio.pinMode(ledPin, Gpio.OUTPUT);
+        Gpio.pullUpDnControl(btnPin, Gpio.PUD_DOWN);
+        Gpio.pullUpDnControl(ledPin, Gpio.PUD_DOWN);
+        Gpio.digitalWrite(ledPin, false);
+        Gpio.wiringPiISR(btnPin, Gpio.INT_EDGE_FALLING, new GpioInterruptCallback() {
+            @Override
+            public void callback(int pin) {
+                if(lastTime + 10 < System.currentTimeMillis()){
+                    Gpio.digitalWrite(ledPin, Gpio.digitalRead(ledPin)==0?1:0);                
+                    logger.debug("GPIO PIN 0 detected. Led state: "+Gpio.digitalRead(ledPin));
+                }               
+                lastTime=System.currentTimeMillis();
+            }
+        });
+    }
+    
+    
     @Override
     protected void loop(String[] args) {
         try {
@@ -73,4 +94,6 @@ public class Ex21_Obstacle01 extends BaseSketch {
             logger.error(ex.getMessage(), ex);
         }
     }
+    
+    
 }

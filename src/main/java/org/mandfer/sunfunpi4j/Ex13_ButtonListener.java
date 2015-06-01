@@ -29,6 +29,8 @@ import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.mandfer.sunfunpi4j.BaseSketch.logger;
 import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
 
@@ -73,8 +75,11 @@ public class Ex13_ButtonListener extends BaseSketch {
         
     @Override
     protected void loop(String[] args) {
-        do{
-        }while(isNotInterrupted);
+        try {
+            countDownLatchEndSketch.await();
+        } catch (InterruptedException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
     
     

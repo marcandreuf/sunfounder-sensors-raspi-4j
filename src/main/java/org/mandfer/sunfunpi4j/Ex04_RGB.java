@@ -54,23 +54,23 @@ public class Ex04_RGB extends RGB_Base {
     protected void loop(String[] args) {
         do{ 
             ledColorSet(Color.RED);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(Color.GREEN);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(Color.BLUE);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(Color.YELLOW);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(Color.PINK);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0xc0,0xff,0x3e);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0x94,0x00,0xd3);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0x76,0xee,0x00);
-            delay(500);
+            delayMilliseconds(500);
             ledColorSet(0x00,0xc5,0xcd);	
-            delay(500);            
+            delayMilliseconds(500);            
         }while(isNotInterrupted);
         turnLedOff();
     }

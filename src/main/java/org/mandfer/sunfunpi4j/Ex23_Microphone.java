@@ -23,12 +23,19 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListener;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex23_Microphone extends BaseSketch {    
+public class Ex23_Microphone extends ADC_Base { 
+    
+    private GpioPinDigitalInput mic_do_pin;
    
     /**
      * @param gpio controller 
@@ -44,12 +51,32 @@ public class Ex23_Microphone extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
+        wiringPiSetup();
+        mic_do_pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03);
+        mic_do_pin.addListener(new GpioPinListenerDigital() {
+
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent gpdsce) {
+               micISR(); 
+            }
+        });
         logger.debug("Sketch ready!");        
+    }
+    
+    private void micISR(){
+        short analogValue = 0;
+        logger.debug("void in");
+        analogValue = get_ADC_Result();
+        logger.debug("Current analog: "+analogValue);
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
-        }while(isNotInterrupted);
+        logger.debug("Please speak ...");
+        try {
+            countDownLatchEndSketch.await();
+        } catch (InterruptedException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
 }

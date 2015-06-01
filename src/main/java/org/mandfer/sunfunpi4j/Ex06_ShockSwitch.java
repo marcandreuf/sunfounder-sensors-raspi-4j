@@ -60,7 +60,7 @@ public class Ex06_ShockSwitch extends BaseSketch {
     protected void loop(String[] args) {
         do{
             if(shockPin.isLow()){
-                delay(10);
+                delayMilliseconds(10);
                 if(shockPin.isLow()){
                     count++;
                     logger.debug("Detected shaking ! count = "+count);

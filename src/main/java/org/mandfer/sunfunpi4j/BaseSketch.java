@@ -23,22 +23,15 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioPin;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Gpio;
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Super class with sketch abstraction methods.
@@ -93,7 +86,7 @@ public abstract class BaseSketch {
         }
     }
 
-    protected void delay(long miliseconds) {
+    protected void delayMilliseconds(long miliseconds) {
         try {
             TimeUnit.MILLISECONDS.sleep(miliseconds);
         } catch (InterruptedException ex) {

@@ -57,9 +57,9 @@ public class Ex08_Infrared extends BaseSketch {
         do{
             logger.debug("Emitting...");
             irPin.high();            
-            delay(500);
+            delayMilliseconds(500);
             irPin.low();
-            delay(500);
+            delayMilliseconds(500);
         }while(isNotInterrupted);
     }
 }

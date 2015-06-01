@@ -66,7 +66,7 @@ public class Ex14_LightBreak extends BaseSketch {
                 logger.debug("led off !");
                 ledPin.low();
             }
-            delay(500);
+            delayMilliseconds(500);
         }while(isNotInterrupted);
     }
 }

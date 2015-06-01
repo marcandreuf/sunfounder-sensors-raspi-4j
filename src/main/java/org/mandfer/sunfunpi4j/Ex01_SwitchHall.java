@@ -59,12 +59,12 @@ public class Ex01_SwitchHall extends BaseSketch {
         do{            
             ledPin.setState(PinState.LOW);
             if(hallPin.isLow()){
-                delay(10);
+                delayMilliseconds(10);
                 if(hallPin.isLow()){
                     while(hallPin.isLow()){}
                     ledPin.setState(PinState.HIGH);
                     logger.info("Detected magnetic materials !");
-                    delay(500);
+                    delayMilliseconds(500);
                 }
             }
         }while(isNotInterrupted);
