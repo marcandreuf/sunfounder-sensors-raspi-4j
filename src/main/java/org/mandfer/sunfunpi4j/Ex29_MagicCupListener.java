@@ -35,19 +35,19 @@ import static org.mandfer.sunfunpi4j.BaseSketch.wiringPiSetup;
  *
  * @author marcandreuf
  */
-public class Ex29_MagicCupInt extends BaseSketch {    
+public class Ex29_MagicCupListener extends BaseSketch {    
     private GpioPinDigitalInput sigPin;
     private GpioPinDigitalOutput ledPin;
     
     /**
      * @param gpio controller 
      */
-    public Ex29_MagicCupInt(GpioController gpio){
+    public Ex29_MagicCupListener(GpioController gpio){
         super(gpio);
     }
     
     public static void main(String[] args) throws InterruptedException {
-        Ex29_MagicCupInt sketch = new Ex29_MagicCupInt(GpioFactory.getInstance());
+        Ex29_MagicCupListener sketch = new Ex29_MagicCupListener(GpioFactory.getInstance());
         sketch.run(args);
     }
     

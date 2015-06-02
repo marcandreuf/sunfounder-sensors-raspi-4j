@@ -65,22 +65,30 @@ public class Ex13_ButtonISR extends BaseSketch {
     }
         
     
-    private static long lastTime = System.currentTimeMillis();;
+    private static volatile long lastTime = System.currentTimeMillis();;
     private static void gpioIsrSetup() {
         wiringPiSetup();
+        
         Gpio.pinMode(btnPin, Gpio.INPUT);
+        Gpio.pullUpDnControl(btnPin, Gpio.PUD_UP);
+        
         Gpio.pinMode(ledPin, Gpio.OUTPUT);
-        Gpio.pullUpDnControl(btnPin, Gpio.PUD_DOWN);
         Gpio.pullUpDnControl(ledPin, Gpio.PUD_DOWN);
         Gpio.digitalWrite(ledPin, false);
+        
         Gpio.wiringPiISR(btnPin, Gpio.INT_EDGE_FALLING, new GpioInterruptCallback() {
+            private final long debounceTime = 200;
             @Override
             public void callback(int pin) {
-                if(lastTime + 10 < System.currentTimeMillis()){
+                Gpio.delay(10);
+                long currentTime = System.currentTimeMillis();
+                if(currentTime > lastTime+debounceTime){
                     Gpio.digitalWrite(ledPin, Gpio.digitalRead(ledPin)==0?1:0);                
                     logger.debug("GPIO PIN 0 detected. Led state: "+Gpio.digitalRead(ledPin));
-                }               
-                lastTime=System.currentTimeMillis();
+                }else{
+                    logger.debug("Discard event "+currentTime);
+                }              
+                lastTime=currentTime;
             }
         });
     }
@@ -93,6 +101,7 @@ public class Ex13_ButtonISR extends BaseSketch {
         } catch (InterruptedException ex) {
             logger.error(ex.getMessage(), ex);
         }
+        Gpio.digitalWrite(ledPin, 0);
     }
     
     
