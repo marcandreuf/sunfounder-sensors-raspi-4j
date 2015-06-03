@@ -23,13 +23,18 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex25_MetalTouchSensor extends BaseSketch {    
-   
+public class Ex25_MetalTouchSensor extends BaseSketch {
+    private GpioPinDigitalInput flamePin;
+    
     /**
      * @param gpio controller 
      */
@@ -44,12 +49,22 @@ public class Ex25_MetalTouchSensor extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
+        flamePin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        flamePin.addListener(new GpioPinListenerDigital() {
+            @Override
+            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent gpdsce) {
+                logger.debug("Detected flame !");
+            }
+        });
         logger.debug("Sketch ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
-        }while(isNotInterrupted);
+        try {
+            countDownLatchEndSketch.await();
+        } catch (InterruptedException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
 }

@@ -26,7 +26,6 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListener;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 /**
@@ -54,13 +53,12 @@ public class Ex23_Microphone extends ADC_Base {
         wiringPiSetup();
         mic_do_pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03);
         mic_do_pin.addListener(new GpioPinListenerDigital() {
-
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent gpdsce) {
                micISR(); 
             }
         });
-        logger.debug("Sketch ready!");        
+        logger.debug("Microphone sensor ready!");        
     }
     
     private void micISR(){

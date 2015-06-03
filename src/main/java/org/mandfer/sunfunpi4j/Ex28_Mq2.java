@@ -23,13 +23,18 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex28_Mq2 extends BaseSketch {    
+public class Ex28_Mq2 extends ADC_Base {    
    
+    private GpioPinDigitalOutput beepPin;
+    
+    
     /**
      * @param gpio controller 
      */
@@ -44,12 +49,25 @@ public class Ex28_Mq2 extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        beepPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
+        logger.debug("Mq sensor ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        short tmp=0;
+        do{
+            tmp = get_ADC_Result();
+            logger.debug(tmp + " tmp");
+            if(tmp>100){
+                beepPin.low();
+                delayMilliseconds(500);
+                beepPin.high();
+                delayMilliseconds(500);
+            }else{
+                beepPin.low();
+            }
         }while(isNotInterrupted);
     }
 }

@@ -29,7 +29,7 @@ import com.pi4j.io.gpio.GpioFactory;
  * @author marcandreuf
  */
 public class Ex19_PhotoResistor extends ADC_Base {    
-    private short illum;
+    
     /**
      * @param gpio controller 
      */
@@ -48,32 +48,43 @@ public class Ex19_PhotoResistor extends ADC_Base {
         logger.debug("Sketch ready!");        
     }
     
-    //http://home.roboticlab.eu/en/examples/sensor/photoresistor
+    /*
+    * Based on calculation from 
+    * http://home.roboticlab.eu/en/examples/sensor/photoresistor
+    * 
+    * SWAP GND AND +5V CONNEXIONS to setup the resistor as per the link above !
+    *
+    */
 
     @Override
     protected void loop(String[] args) {
         short analogVal;
-        double voltage;
+        double voltageReading;
         double resistance;
         double illuminance;
+                
         do {
+            logger.debug("---------------------");
+            
             analogVal = get_ADC_Result();
-            illum = (short) (210 - analogVal);
-            logger.debug("Current illumination: " + Integer.valueOf(illum));
-            
+            logger.debug("ADC value: "+analogVal);
+           
             // U = Uref * (ADC / 256)
-            voltage = (float) ((analogVal / 256) * 5);
-            logger.debug("Current voltage: "+voltage);
+            voltageReading = (analogVal / 256d) * 5d;
+            logger.debug("Voltage: "+Double.toString(voltageReading));
             
-            //With a R2 of 10k
+            //With a R2 of 10k and Uref, voltage reference at 5V
             // R = (R2*Uref)/U2-R2
-            resistance = (10*5)/voltage-10;
+            resistance = (10d*5d)/voltageReading-10d;
             logger.debug("Resistance: "+resistance);
                         
-            illuminance = 255.84 * Math.pow(resistance, -10/9);
-            logger.debug("Light intensisty in LUX: "+illuminance);
+            illuminance = 255.84 * Math.pow(resistance, -10d/9d);
+            logger.debug("Illuminance in LUX: "+illuminance);
                                     
-            delayMilliseconds(1000);
+            delayMilliseconds(3000);
+            logger.debug("---------------------");
+            logger.debug("");
+            logger.debug("");
         } while (isNotInterrupted);
     }
 }

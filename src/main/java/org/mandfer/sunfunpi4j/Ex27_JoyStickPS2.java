@@ -23,13 +23,18 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex27_JoyStickPS2 extends BaseSketch {    
+public class Ex27_JoyStickPS2 extends ADC_Base {    
    
+    private GpioPinDigitalInput joyStick_Z;
+    
     /**
      * @param gpio controller 
      */
@@ -44,12 +49,47 @@ public class Ex27_JoyStickPS2 extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        joyStick_Z = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03);
+        joyStick_Z.setPullResistance(PinPullResistance.PULL_UP);
+        logger.debug("Joystick ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        short tmp=0;
+        int channelX=0, channelY=1;
+        short xVal=0, yVal=0, zVal=0;
+        do{
+            xVal = get_ADC_Result(channelX);
+            if(xVal == 0){
+                tmp = 1; //up	
+            }
+            if(xVal == 255){
+                tmp = 2; //down
+            }
+
+            yVal = get_ADC_Result(channelY);
+            if(yVal == 0){
+                tmp = 3; //left
+            }
+            if(yVal == 255){
+                tmp = 4; //right
+            }
+
+            zVal = (short) joyStick_Z.getState().getValue();
+            if(zVal == 0){
+                logger.debug("Button is pressed!");
+            }
+            
+            switch(tmp){
+                case 1: logger.debug("up"); break;
+                case 2: logger.debug("down"); break;
+                case 3: logger.debug("right"); break;
+                case 4: logger.debug("left"); break;
+                default: break;
+            }
+            
         }while(isNotInterrupted);
     }
 }

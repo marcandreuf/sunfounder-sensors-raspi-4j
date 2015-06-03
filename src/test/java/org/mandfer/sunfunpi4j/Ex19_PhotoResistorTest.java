@@ -21,6 +21,7 @@
 
 package org.mandfer.sunfunpi4j;
 
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -37,12 +38,15 @@ public class Ex19_PhotoResistorTest extends BaseSketchTest{
     
     @Before
     public void setUp(){
-        sketch = new Ex19_PhotoResistor(mocked_gpioController);
+        //sketch = new Ex19_PhotoResistor(mocked_gpioController);
     }
     
     @Test
-    public void verifySetup(){
-        //sketch.setup();
+    public void testVoltageCalculations(){
+        int analogVal=98;
+        double voltage = (analogVal / 256d) * 5d;
+        logger.debug("voltage "+voltage);
+        assertTrue(voltage == 1.9140625d);
     }    
 
 }

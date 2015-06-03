@@ -23,12 +23,17 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
  * @author marcandreuf
  */
-public class Ex24_FlameSensor extends BaseSketch {    
+public class Ex24_FlameSensor extends BaseSketch { 
+    private GpioPinDigitalInput touchPin;
+    private GpioPinDigitalOutput ledPin;
    
     /**
      * @param gpio controller 
@@ -44,12 +49,21 @@ public class Ex24_FlameSensor extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
-        logger.debug("Sketch ready!");        
+        wiringPiSetup();
+        touchPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+        ledPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        logger.debug("Flame sensor ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+            if(touchPin.isHigh()){
+                logger.debug("touched");
+                ledPin.low();  //Led on
+                delayMilliseconds(100);
+                ledPin.high(); //Led off
+            }
         }while(isNotInterrupted);
     }
 }

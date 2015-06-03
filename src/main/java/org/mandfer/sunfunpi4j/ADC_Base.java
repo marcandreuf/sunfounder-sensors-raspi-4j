@@ -35,6 +35,10 @@ public abstract class ADC_Base extends BaseSketch {
     }
 
     protected short get_ADC_Result() {
+        return get_ADC_Result(0);
+    }
+    
+    protected short get_ADC_Result(int channel) {
         short dat1 = 0, dat2 = 0;
 
         // Prepare ACD_DIO for MUX addess configuration 
@@ -57,9 +61,13 @@ public abstract class ADC_Base extends BaseSketch {
         ADC_CLK.high();
         delayMicrosendos(2);
 
-        // MUX ODD/SIGN bit to setup analog input in Channel #0
+        // MUX ODD/SIGN bit to setup
         ADC_CLK.low();
-        ADC_DIO.low();
+        if(channel==0){
+            ADC_DIO.low();  // analog input in Channel #0
+        }else{
+            ADC_DIO.high();  // analog input in Channel #1
+        }
         delayMicrosendos(2);
         ADC_CLK.high();
 

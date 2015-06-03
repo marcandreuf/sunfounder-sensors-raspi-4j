@@ -101,7 +101,7 @@ public class Ex20_DHT11 extends BaseSketch {
             if(counter == 255) break;
             
             // Ignore first 3 transitions
-            if( (i>=4)&&(i%2==0) ){
+            if( (i>=4) && (i%2==0)){
                 // shove each bit into the storage bytes
                 dht11_dat[j/8] <<= 1;
                 if(counter > 16){
@@ -114,7 +114,7 @@ public class Ex20_DHT11 extends BaseSketch {
         // check we read 40 bits (8bit x 5 ) + verify checksum in the last byte
 	// print it out if data is good
        if ((j >= 40) && (dht11_dat[4] == ((dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF)) ) {
-		f = (float) (dht11_dat[2] * 9. / 5. + 32);
+		f = (float) (dht11_dat[2] * 9f / 5f + 32f);
 		logger.debug("Humidity = "+dht11_dat[0]+"."+dht11_dat[1]
                       +". Temperature = "+dht11_dat[2]+"."+dht11_dat[3]+" *C ("+f+" *F)");
 	}

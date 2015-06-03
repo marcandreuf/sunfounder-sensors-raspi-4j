@@ -23,6 +23,8 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
 
 /**
  *
@@ -30,6 +32,8 @@ import com.pi4j.io.gpio.GpioFactory;
  */
 public class Ex26_Relay extends BaseSketch {    
    
+    private GpioPinDigitalOutput relayPin;
+        
     /**
      * @param gpio controller 
      */
@@ -44,12 +48,17 @@ public class Ex26_Relay extends BaseSketch {
     
     @Override
     protected void setup(String[] args) {
-        logger.debug("Sketch ready!");        
+        relayPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00);        
+        logger.debug("Relay ready!");        
     }
 
     @Override
     protected void loop(String[] args) {
-        do{                   
+        do{
+            relayPin.low();
+            delayMilliseconds(1000);
+            relayPin.high();
+            delayMilliseconds(1000);
         }while(isNotInterrupted);
     }
 }
