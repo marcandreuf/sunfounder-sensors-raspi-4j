@@ -23,20 +23,39 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
-import com.pi4j.io.gpio.PinMode;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
+import static com.pi4j.wiringpi.Gpio.HIGH;
+import static com.pi4j.wiringpi.Gpio.INPUT;
+import static com.pi4j.wiringpi.Gpio.LOW;
+import static com.pi4j.wiringpi.Gpio.OUTPUT;
+import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
+import static com.pi4j.wiringpi.Gpio.digitalRead;
+import static com.pi4j.wiringpi.Gpio.digitalWrite;
+import static com.pi4j.wiringpi.Gpio.pinMode;
 
 /**
  *
+ * Looks like this sensor does not work in JAVA due to timing precision. 
+ * 
+ * It should work using this tutorial from Aadafruit 
+ * 
+ * https://learn.adafruit.com/downloads/pdf/dht-humidity-sensing-on-raspberry-pi-with-gdocs-logging.pdf
+ * 
+ * TODO: Make a direct call to the C library underneath Python.
+ * Optionally call the DHT11.c from java and parse the values.
+ * 
+ * TODO: Implement JNI integration of the c library
+ * http://en.wikipedia.org/wiki/Java_Native_Interface#Examples
+ * https://bitbucket.org/Temdegon/greenhouse
+ * check in sensors folder
+ * 
+ * 
  * @author marcandreuf
  */
 public class Ex20_DHT11 extends BaseSketch {    
-   
+    private final int dhtPin = 1;
     private final int MAXTIMINGS = 85;
-    private GpioPinDigitalMultipurpose dhtPin;
-    private int[] dht11_dat = {0,0,0,0,0};
+    //private GpioPinDigitalMultipurpose dhtPin;
+    private final int[] dht11_dat = {0,0,0,0,0};
    
     /**
      * @param gpio controller 
@@ -53,7 +72,7 @@ public class Ex20_DHT11 extends BaseSketch {
     @Override
     protected void setup(String[] args) {
         wiringPiSetup();
-        dhtPin = gpio.provisionDigitalMultipurposePin(RaspiPin.GPIO_01, PinMode.DIGITAL_OUTPUT);
+        //dhtPin = gpio.provisionDigitalMultipurposePin(RaspiPin.GPIO_01, PinMode.DIGITAL_OUTPUT);
         logger.debug("DHT11 sensor ready!");        
     }
 
@@ -66,53 +85,66 @@ public class Ex20_DHT11 extends BaseSketch {
     }
 
     private void read_dht11_dat() {
-        PinState lastState = PinState.HIGH;
-        short counter = 0;
-        short j=0, i;
+        int lastState = HIGH;
+        int currentState;
+        int counter = 0;
+        int j=0, i;
         float f; // fahrenheit
         
         // Required ???
         dht11_dat[0] = dht11_dat[1] = dht11_dat[2] = dht11_dat[3] = dht11_dat[4] = 0;
         
+        pinMode(dhtPin, OUTPUT);
+        
+//        digitalWrite(dhtPin, HIGH);
+//        delayMilliseconds(500);
+
         // Pull pin down for 18 milliseconds
-        dhtPin.setMode(PinMode.DIGITAL_OUTPUT);
-        dhtPin.low();
-        delayMilliseconds(18);
+        digitalWrite(dhtPin, LOW);
+        delayMilliseconds(20);
         
         // Pull pin up for 40 microseconds
-        dhtPin.high();
+        digitalWrite(dhtPin, HIGH);
         delayMicrosendos(40);
         
         // Prepare to read from the pin
-        dhtPin.setMode(PinMode.DIGITAL_INPUT);
-        
+        pinMode(dhtPin, INPUT);
+                
+        delayMicroseconds(10);
         // Detect change and read data
         for(i=0; i<MAXTIMINGS; i++){
             counter = 0;
-            while(dhtPin.getState() == lastState){
+            while(digitalRead(dhtPin) == lastState){
                 counter++;
                 delayMicrosendos(1);
                 if(counter == 255){
                     break;
                 }
             }
-            lastState = dhtPin.getState();
+            lastState = digitalRead(dhtPin);
+                        
+            if(counter == 255){
+                //logger.debug("counted 255 break 2");
+                break;
+            }
             
-            if(counter == 255) break;
-            
-            // Ignore first 3 transitions
+            // Ignore first 3 transitions            
             if( (i>=4) && (i%2==0)){
+                logger.debug("shove bits "+counter);
                 // shove each bit into the storage bytes
                 dht11_dat[j/8] <<= 1;
                 if(counter > 16){
                     dht11_dat[j/8] |= 1;
                 }
                 j++;
+            }else{
+                logger.debug("Ignore transition");
             }
         }
         
         // check we read 40 bits (8bit x 5 ) + verify checksum in the last byte
 	// print it out if data is good
+        logger.debug("j: "+j);
        if ((j >= 40) && (dht11_dat[4] == ((dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF)) ) {
 		f = (float) (dht11_dat[2] * 9f / 5f + 32f);
 		logger.debug("Humidity = "+dht11_dat[0]+"."+dht11_dat[1]
