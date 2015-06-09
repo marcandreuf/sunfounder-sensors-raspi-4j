@@ -24,7 +24,6 @@ package org.mandfer.sunfunpi4j;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;

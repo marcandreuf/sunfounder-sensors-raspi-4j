@@ -59,7 +59,7 @@ public class Ex24_FlameSensor extends BaseSketch {
     protected void loop(String[] args) {
         do{
             if(touchPin.isHigh()){
-                logger.debug("touched");
+                logger.debug("Detected Flame !");
                 ledPin.low();  //Led on
                 delayMilliseconds(100);
                 ledPin.high(); //Led off

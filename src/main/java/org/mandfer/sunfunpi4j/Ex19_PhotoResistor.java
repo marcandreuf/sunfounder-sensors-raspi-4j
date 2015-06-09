@@ -64,8 +64,6 @@ public class Ex19_PhotoResistor extends ADC_Base {
         double illuminance;
                 
         do {
-            logger.debug("---------------------");
-            
             analogVal = get_ADC_Result();
             logger.debug("ADC value: "+analogVal);
            
@@ -79,12 +77,9 @@ public class Ex19_PhotoResistor extends ADC_Base {
             logger.debug("Resistance: "+resistance);
                         
             illuminance = 255.84 * Math.pow(resistance, -10d/9d);
-            logger.debug("Illuminance in LUX: "+illuminance);
+            logger.debug("Illuminance in LUX: "+illuminance+"\n\n");
                                     
             delayMilliseconds(3000);
-            logger.debug("---------------------");
-            logger.debug("");
-            logger.debug("");
         } while (isNotInterrupted);
     }
 }
