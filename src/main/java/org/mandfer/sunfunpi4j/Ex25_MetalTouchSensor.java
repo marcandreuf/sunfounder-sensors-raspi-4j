@@ -53,10 +53,10 @@ public class Ex25_MetalTouchSensor extends BaseSketch {
         flamePin.addListener(new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent gpdsce) {
-                logger.debug("Detected flame !");
+                logger.debug("Detected contact !");
             }
         });
-        logger.debug("Sketch ready!");        
+        logger.debug("Touch sensor ready!");        
     }
 
     @Override

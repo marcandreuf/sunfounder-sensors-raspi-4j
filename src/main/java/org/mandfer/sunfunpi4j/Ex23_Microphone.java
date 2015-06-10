@@ -50,7 +50,7 @@ public class Ex23_Microphone extends ADC_Base {
     
     @Override
     protected void setup(String[] args) {
-        wiringPiSetup();
+        super.setup(args);
         mic_do_pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03);
         mic_do_pin.addListener(new GpioPinListenerDigital() {
             @Override
@@ -62,7 +62,7 @@ public class Ex23_Microphone extends ADC_Base {
     }
     
     private void micISR(){
-        short analogValue = 0;
+        short analogValue;
         logger.debug("void in");
         analogValue = get_ADC_Result();
         logger.debug("Current analog: "+analogValue);

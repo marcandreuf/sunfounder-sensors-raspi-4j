@@ -55,10 +55,13 @@ public class Ex26_Relay extends BaseSketch {
     @Override
     protected void loop(String[] args) {
         do{
+            logger.debug("low");
             relayPin.low();
-            delayMilliseconds(1000);
+            delayMilliseconds(2000);
+            
+            logger.debug("high");
             relayPin.high();
-            delayMilliseconds(1000);
+            delayMilliseconds(2000);
         }while(isNotInterrupted);
     }
 }

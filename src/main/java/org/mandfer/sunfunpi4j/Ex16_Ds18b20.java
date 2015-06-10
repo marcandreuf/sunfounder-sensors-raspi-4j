@@ -29,8 +29,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Detect de w1 device in the RaspberryPi.
@@ -40,9 +38,11 @@ import java.util.logging.Logger;
  */
 public class Ex16_Ds18b20 extends BaseSketch {    
    
-    private final static String W1_DEVICES_PATH = "/sys/bus/w1/devices/";
-    private final static String W1_SLAVE = "/w1_slave";
+    public final static String W1_DEVICES_PATH = "/sys/bus/w1/devices/";
+    public final static String W1_SLAVE = "/w1_slave";
     private String device_fileName; // Argument to point 28-000xxxx
+    
+    
     
     /**
      * @param gpio controller 
@@ -62,7 +62,8 @@ public class Ex16_Ds18b20 extends BaseSketch {
             device_fileName = args[0];            
             logger.debug("Ds18b20 sensor ready!");        
         }else{
-            throw new RuntimeException("Please provide a device file name from "+W1_DEVICES_PATH);
+            throw new RuntimeException(
+                    "Please provide a device file name from "+W1_DEVICES_PATH);
         }
     }
 

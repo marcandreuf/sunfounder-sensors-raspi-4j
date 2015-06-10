@@ -38,7 +38,7 @@ public abstract class ADC_Base extends BaseSketch {
         return get_ADC_Result(0);
     }
     
-    protected short get_ADC_Result(int channel) {
+    protected synchronized short get_ADC_Result(int channel) {
         short dat1 = 0, dat2 = 0;
 
         // Prepare ACD_DIO for MUX addess configuration 
