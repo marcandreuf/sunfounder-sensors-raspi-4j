@@ -62,7 +62,6 @@ public class Ex30_TempMonitor extends ADC_Base {
         super.setup(args);
         if(args.length == 1){
             device_fileName = args[0];            
-            logger.debug("Temperature monitor ready!");
         }else{
             throw new RuntimeException(
                     "Please provide a device file name from "
@@ -81,12 +80,12 @@ public class Ex30_TempMonitor extends ADC_Base {
             }
         });
         sys_state = PinState.HIGH;
-                
+        logger.debug("Temperature monitor ready!");                
     }
 
     @Override
     protected void loop(String[] args) {
-        int low=26, high=30, joyStick=0;
+        int low=26, high=30, joyStick;
         double temp;
         
         logger.info("System is running...");        

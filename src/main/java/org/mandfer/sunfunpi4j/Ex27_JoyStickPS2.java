@@ -49,7 +49,7 @@ public class Ex27_JoyStickPS2 extends ADC_Base {
     
     @Override
     protected void setup(String[] args) {
-        wiringPiSetup();
+        super.setup(args);
         joyStick_Z = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03);
         joyStick_Z.setPullResistance(PinPullResistance.PULL_UP);
         logger.debug("Joystick ready!");        
@@ -57,10 +57,11 @@ public class Ex27_JoyStickPS2 extends ADC_Base {
 
     @Override
     protected void loop(String[] args) {
-        short tmp=0;
+        int tmp;
         int channelX=0, channelY=1;
         short xVal=0, yVal=0, zVal=0;
         do{
+	    tmp = 0;
             xVal = get_ADC_Result(channelX);
             if(xVal == 0){
                 tmp = 1; //up	
@@ -71,10 +72,10 @@ public class Ex27_JoyStickPS2 extends ADC_Base {
 
             yVal = get_ADC_Result(channelY);
             if(yVal == 0){
-                tmp = 3; //left
+                tmp = 3; //right
             }
             if(yVal == 255){
-                tmp = 4; //right
+                tmp = 4; //left
             }
 
             zVal = (short) joyStick_Z.getState().getValue();
@@ -83,6 +84,7 @@ public class Ex27_JoyStickPS2 extends ADC_Base {
             }
             
             switch(tmp){
+		case 0: logger.debug("neutral"); break;
                 case 1: logger.debug("up"); break;
                 case 2: logger.debug("down"); break;
                 case 3: logger.debug("right"); break;
