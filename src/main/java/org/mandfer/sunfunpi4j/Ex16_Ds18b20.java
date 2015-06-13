@@ -71,19 +71,22 @@ public class Ex16_Ds18b20 extends BaseSketch {
     protected void loop(String[] args) {
         double temp;
         do{
-            temp = readTempFromFile(W1_DEVICES_PATH+device_fileName+W1_SLAVE);
+            temp = readTempFromFile(getFullPathToDevice(device_fileName));
             logger.debug("Temperature is "+temp);
         }while(isNotInterrupted);
     }
+    
+    public static Path getFullPathToDevice(String deviceFileName){
+        return FileSystems.getDefault().getPath(W1_DEVICES_PATH+deviceFileName+W1_SLAVE);
+    }
 
-    public static double readTempFromFile(String sampleFile) {
+    public static double readTempFromFile(Path pathDeviceFile) {
         int iniPos, endPos;
         String strTemp, strTempIdentifier = "t=";
         double tvalue = 0;
         List<String> lines;
         try {
-            Path path = FileSystems.getDefault().getPath(sampleFile);
-            lines = Files.readAllLines(path, Charset.defaultCharset());
+            lines = Files.readAllLines(pathDeviceFile, Charset.defaultCharset());
             for(String line : lines){
                 if(line.contains(strTempIdentifier)){
                     iniPos = line.indexOf(strTempIdentifier)+2;
@@ -93,7 +96,7 @@ public class Ex16_Ds18b20 extends BaseSketch {
                 }
             }        
         } catch (IOException ex) {
-            logger.error("Error while reading file "+sampleFile, ex);
+            logger.error("Error while reading file "+pathDeviceFile, ex);
         }
         return tvalue;
     }

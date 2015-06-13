@@ -22,6 +22,7 @@
 package org.mandfer.sunfunpi4j;
 
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -46,9 +47,7 @@ public class Ex16_Ds18b20Test extends BaseSketchTest{
     @Test
     public void testReadDataFromFile() throws URISyntaxException{   
         
-        String sampleFile = Paths
-          .get(getClass().getResource("/Ex16_Ds18b20_sample_w1Slave").toURI())
-          .toString();
+        Path sampleFile = Paths.get(getClass().getResource("/Ex16_Ds18b20_sample_w1Slave").toURI());
         
         double temp = Ex16_Ds18b20.readTempFromFile(sampleFile);
         

@@ -152,7 +152,8 @@ public class Ex30_TempMonitor extends ADC_Base {
     }
     
     private double tempRead(){
-        return Ex16_Ds18b20.readTempFromFile(device_fileName);
+        return Ex16_Ds18b20.readTempFromFile(
+                    Ex16_Ds18b20.getFullPathToDevice(device_fileName));
     }
     
     private int get_joyStick_state(){

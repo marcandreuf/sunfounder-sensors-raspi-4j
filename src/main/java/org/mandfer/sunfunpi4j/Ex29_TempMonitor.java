@@ -41,7 +41,7 @@ public class Ex29_TempMonitor extends BaseSketch {
     private GpioPinDigitalOutput ledBlue; // Pin 2
     private GpioPinDigitalOutput beep; // Pin 3
     private String device_fileName; // Argument to point 28-000xxxx
-    int low, high;
+    double low, high;
 
     /**
      * @param gpio controller
@@ -57,10 +57,11 @@ public class Ex29_TempMonitor extends BaseSketch {
 
     @Override
     protected void setup(String[] args) {
-        if (args.length != 4) {
-            device_fileName = args[0];
-            low = Integer.parseInt(args[1]);
-            high = Integer.parseInt(args[2]);
+        logger.debug("args: "+args.length);
+        if (args.length == 3) {
+            device_fileName = args[0];  // 28-0314655cbaff
+            low = Double.parseDouble(args[1]);
+            high = Double.parseDouble(args[2]);
             if (low >= high) {
                 throw new RuntimeException(
                         "Arguments error, lower limit "
@@ -88,9 +89,9 @@ public class Ex29_TempMonitor extends BaseSketch {
         do {
             temp = tempRead();
 
-            logger.info("The lower limit of temperature : %d\n", low);
-            logger.info("The upper limit of temperature : %d\n", high);
-            logger.info("Current temperature : %0.3f\n", temp);
+            logger.info(String.format("The lower limit of temperature : %.2f\n", low));
+            logger.info(String.format("The upper limit of temperature : %.2f\n", high));
+            logger.info(String.format("Current temperature : %.2f\n", temp));
 
             if (temp < low) {
                 ledBlue.high();
@@ -104,13 +105,14 @@ public class Ex29_TempMonitor extends BaseSketch {
                 ledBlue.low();
                 ledRed.low();
                 ledGreen.high();
+                beep.low();
             }
             if (temp >= high) {
                 ledBlue.low();
                 ledRed.high();
                 ledGreen.low();
                 for (int i = 0; i < 3; i++) {
-                    beepCtrl(100);
+                    beepCtrl(50);
                 }
             }
         } while (isNotInterrupted);
@@ -124,6 +126,7 @@ public class Ex29_TempMonitor extends BaseSketch {
     }
 
     private double tempRead() {
-        return Ex16_Ds18b20.readTempFromFile(device_fileName);
+        return Ex16_Ds18b20.readTempFromFile(
+                    Ex16_Ds18b20.getFullPathToDevice(device_fileName));
     }
 }

@@ -23,8 +23,6 @@ package org.mandfer.sunfunpi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.mandfer.dht11.DHT11SensorReader;
 
 /**

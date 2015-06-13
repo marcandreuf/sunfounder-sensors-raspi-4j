@@ -49,7 +49,7 @@ public class Ex28_Mq2 extends ADC_Base {
     
     @Override
     protected void setup(String[] args) {
-        wiringPiSetup();
+        super.setup(args);
         beepPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
         logger.debug("Mq sensor ready!");        
     }
