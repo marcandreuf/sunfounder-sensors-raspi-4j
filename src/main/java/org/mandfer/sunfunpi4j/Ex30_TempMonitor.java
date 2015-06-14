@@ -37,12 +37,12 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
  */
 public class Ex30_TempMonitor extends ADC_Base {    
    
-    private GpioPinDigitalOutput ledRed; // Pin 2
-    private GpioPinDigitalOutput ledGreen;  // Pin 4
-    private GpioPinDigitalOutput ledBlue; // Pin 5
-    private GpioPinDigitalInput joyStick_Z; // Pin 6
-    private GpioPinDigitalOutput beep; // Pin 8
-    private String device_fileName; // Argument to point 28-000xxxx 
+    private GpioPinDigitalOutput ledRed; // GPIO 3
+    private GpioPinDigitalOutput ledGreen;  // GPIO 4
+    private GpioPinDigitalOutput ledBlue; // GPIO 5
+    private GpioPinDigitalInput joyStick_Z; // GPIO 6
+    private GpioPinDigitalOutput beep; // GPIO 8
+    private String device_fileName; // Argument to point 28-000xxxx on GPIO 7 
     private PinState sys_state;
     
     /**
@@ -61,13 +61,13 @@ public class Ex30_TempMonitor extends ADC_Base {
     protected void setup(String[] args) {
         super.setup(args);
         if(args.length == 1){
-            device_fileName = args[0];            
+            device_fileName = args[0];         
         }else{
             throw new RuntimeException(
                     "Please provide a device file name from "
                             +Ex16_Ds18b20.W1_DEVICES_PATH);
         }
-        ledRed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02);
+        ledRed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
         ledGreen = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04);
         ledBlue = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05);
         beep = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08);
@@ -85,7 +85,7 @@ public class Ex30_TempMonitor extends ADC_Base {
 
     @Override
     protected void loop(String[] args) {
-        int low=26, high=30, joyStick;
+        int low=20, high=25, joyStick;
         double temp;
         
         logger.info("System is running...");        
@@ -99,39 +99,41 @@ public class Ex30_TempMonitor extends ADC_Base {
                 default: break;
             }
             if(low < high){
-                logger.info("The lower limit of temperature : %d\n", low);
-                logger.info("The upper limit of temperature : %d\n", high);                
-            }   
-            temp = tempRead();
-            logger.info("Current temperature : %0.3f\n", temp);            
-            if(temp < low){
-                ledBlue.high();
-                ledRed.low();
-                ledGreen.low();
-                for(int i=0; i<3; i++){
-                    beepCtrl(400);
-                }                
-            }
-            if(temp >= low && temp < high){
-                ledBlue.low();
-                ledRed.low();
-                ledGreen.high();
-            }
-            if(temp >= high){
-                ledBlue.low();
-                ledRed.high();
-                ledGreen.low();
-                for(int i=0; i<3; i++){
-                    beepCtrl(80);
+                temp = tempRead();
+                logger.info("--------------------------------------------");
+                logger.info(String.format("Lower limit: %d. Upper limit %d", low, high));
+                logger.info(String.format("Current temperature : %.2f\n\n", temp));
+                
+                if(temp < low){
+                    ledBlue.high();
+                    ledRed.low();
+                    ledGreen.low();
+                    for(int i=0; i<3; i++){
+                        beepCtrl(1000);
+                    }                
                 }
-            }
-            if(sys_state.isLow()){
-                ledRed.low();
-                ledBlue.low();
-                ledGreen.low();
-                beep_off();
-                logger.info("System will be off...");
-                setSketchInterruption(); // Set to finish the loop.
+                if(temp >= low && temp < high){
+                    ledBlue.low();
+                    ledRed.low();
+                    ledGreen.high();
+                    beep.low();
+                }
+                if(temp >= high){
+                    ledBlue.low();
+                    ledRed.high();
+                    ledGreen.low();
+                    for(int i=0; i<3; i++){
+                        beepCtrl(80);
+                    }
+                }
+                if(sys_state.isLow()){
+                    ledRed.low();
+                    ledBlue.low();
+                    ledGreen.low();
+                    beep_off();
+                    logger.info("System will be off...");
+                    setSketchInterruption(); // Set to finish the loop.
+                }
             }
         }while(isNotInterrupted);
     }

@@ -40,7 +40,7 @@ public class Ex29_TempMonitor extends BaseSketch {
     private GpioPinDigitalOutput ledGreen;  // Pin 1
     private GpioPinDigitalOutput ledBlue; // Pin 2
     private GpioPinDigitalOutput beep; // Pin 3
-    private String device_fileName; // Argument to point 28-000xxxx
+    private String device_fileName; // Argument to point 28-000xxxx  on GPIO 7 
     double low, high;
 
     /**
@@ -57,9 +57,8 @@ public class Ex29_TempMonitor extends BaseSketch {
 
     @Override
     protected void setup(String[] args) {
-        logger.debug("args: "+args.length);
         if (args.length == 3) {
-            device_fileName = args[0];  // 28-0314655cbaff
+            device_fileName = args[0];
             low = Double.parseDouble(args[1]);
             high = Double.parseDouble(args[2]);
             if (low >= high) {
@@ -89,9 +88,9 @@ public class Ex29_TempMonitor extends BaseSketch {
         do {
             temp = tempRead();
 
-            logger.info(String.format("The lower limit of temperature : %.2f\n", low));
-            logger.info(String.format("The upper limit of temperature : %.2f\n", high));
-            logger.info(String.format("Current temperature : %.2f\n", temp));
+            logger.info("--------------------------------------------");
+            logger.info(String.format("Lower limit: %.2f . Upper limit %.2f", low, high));
+            logger.info(String.format("Current temperature : %.2f\n\n", temp));
 
             if (temp < low) {
                 ledBlue.high();

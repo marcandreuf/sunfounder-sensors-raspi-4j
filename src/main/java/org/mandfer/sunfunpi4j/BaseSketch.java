@@ -110,7 +110,6 @@ public abstract class BaseSketch {
     }
 
     private class CheckEnd implements Runnable {
-
         Scanner scanner = new Scanner(System.in);
 
         @Override
