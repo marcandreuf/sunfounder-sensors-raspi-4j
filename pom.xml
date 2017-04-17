@@ -14,14 +14,21 @@
 
     <!-- BUILD PROPERTIES -->
     <properties>
-        <!-- DEFAULT RASPBERRY PI PROPERTIES -->
+
+
+        <!-- ............ SETUP PROPERTIES FOR YOUR PI ............... -->
+        <!-- .......................................................................... -->
         <pi.host>192.168.0.11</pi.host>
         <pi.port>22</pi.port>
         <pi.user>pi</pi.user>
-        <pi.password>streametry</pi.password>        
+        <pi.password>xxxx</pi.password>
         
         <!-- SETTINGS FOR REMOTELY BUILDING NATIVE LIBRARY ON RASPBERRY PI -->
         <pi.dirBuildTemp>/home/pi/pi4j-temp</pi.dirBuildTemp>
+        <pi.dirCopyTo.dev>/home/pi/sunfounder-sensors-raspi-4j/</pi.dirCopyTo.dev>
+        <!-- ........................................................................... -->
+
+
 
         <!-- SETTINGS FOR COPYING Pi4J ARTIFACTS TO DEVELOPMENT RASPBERRY PI -->
         <pi.transfer.dev>false</pi.transfer.dev>
@@ -29,8 +36,7 @@
         <pi.port.dev>${pi.port}</pi.port.dev>
         <pi.user.dev>${pi.user}</pi.user.dev>
         <pi.password.dev>${pi.password}</pi.password.dev>
-        <pi.dirCopyTo.dev>/home/pi/sunfounder-sensors-raspi-4j/</pi.dirCopyTo.dev>
-        
+
         <!-- DEPENDENCY VERSIONS -->
         <ant-jsch.version>1.7.1</ant-jsch.version>
         <jsch.version>0.1.51</jsch.version>
@@ -67,7 +73,7 @@
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.1</version>
         </dependency>
 
         <!-- Logging tools -->
